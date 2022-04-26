@@ -19,7 +19,7 @@ output: pdf_document
 \vspace{0.5cm}
 
 ```{r echo=FALSE, out.width = "300px", out.height="150px",fig.align='center'}
-knitr::include_graphics("C:/Users/Usuario/Desktop/LOGO.png")
+knitr::include_graphics("Imagenes/LOGO.png")
 
 ```
 \vfill
@@ -72,15 +72,10 @@ Para predecir la satisfaccion se tomaron en cuenta las evidencias halladas en la
 glimpse(personas)
 ```
 
-```{r, echo=FALSE}
-per_lim<-personas %>% select(-ID_Persona)
-```
-
-
-
 
 
 ```{r,echo=F}
+per_lim<-personas %>% select(-ID_Persona)
 M = cor(per_lim)
 ggcorrplot(M, hc.order = TRUE, type = "lower",
    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
