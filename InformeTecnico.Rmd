@@ -1,32 +1,89 @@
 ---
-title: "Informe Técnico"
-subtitle: "Satisfacción de Niños y Abuelos"
-author: "Brayan Ortiz, Juan Peña, Thalea Hesse, Juan Falcon, Daniel Espinal"
-date: "`r Sys.Date()`"
-output: html_document
+title: ""
+author: ""
+date: ""
+output: pdf_document
 ---
+\begin{titlepage}
+\centering
+{\scshape\Huge Informe Tecnico \par}
+{\scshape\Huge  Satisfaccion de Niños y Abuelos \par}
+\vspace{2cm}
+{\Large Por: \par}
+{\Large Daniel\par}
+{\Large Juan Sebastián Falcón\par}
+{\Large Peña\par}
+{\Large Brayan\par}
+{\Large Thalea\par}
+\vfill
+\vspace{0.5cm}
 
-```{r setup, include=FALSE}
+```{r echo=FALSE, out.width = "300px", out.height="150px",fig.align='center'}
+knitr::include_graphics("C:/Users/Usuario/Desktop/LOGO.png")
+
+```
+\vfill
+\vspace{0.5cm}
+{\bfseries\LARGE Universidad Nacional de Colombia \par Sede Medellín \par}
+\vspace{1cm}
+\end{titlepage}
+
+```{r setup, include=FALSE, echo=FALSE}
 library(readxl)
 library(dplyr)
-library(ggplot2)
+require(ggplot2)
 #library(Hmisc)
-library(corrplot)
+require(corrplot)
 library(reshape2)
+require(kableExtra)
+require(ggcorrplot)
+require(magrittr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
 
-```{r personas}
+```{r, echo=F}
 personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=",")
 ```
-## Including Plots
 
-You can also embed plots, for example:
+
+# Seleccion de Variables
+
+Para predecir la satisfaccion se tomaron en cuenta las evidencias halladas en la bibliografia, donde se encontro que las variables relacionadas con el nivel de satisfaccion de una persona son las siguientes:
+
+* NIVEL_DE_EDUCACION
+* SEXO
+* SALUD_AUTOPERCIBIDA
+* ESTADO_CIVIL
+* ETNIA
+* INGRESO_AUTOPERCIBIDO
+* SEGURIDAD_AUTOPERCIBIDA
+* TRABAJO_AUTOPERCIBIDO
+* SATISFACCION
+* I_HOGAR
+* PERCAPITA
+* COND_VIDA_DEL_HOGAR
+
+
 
 
 ```{r pressure, echo=FALSE}
-str(personas)
+glimpse(personas)
 ```
+
+```{r, echo=FALSE}
+per_lim<-personas %>% select(-ID_Persona)
+```
+
+
+
+
+
+```{r,echo=F}
+M = cor(per_lim)
+ggcorrplot(M, hc.order = TRUE, type = "lower",
+   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
+```
+
 
