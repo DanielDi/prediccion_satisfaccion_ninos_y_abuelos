@@ -30,6 +30,9 @@ knitr::include_graphics("Imagenes/LOGO.png")
 \end{titlepage}
 
 ```{r setup, include=FALSE, echo=FALSE}
+library(ggplot2)
+library(dplyr)
+library(hrbrthemes)
 library(readxl)
 library(dplyr)
 require(ggplot2)
@@ -91,7 +94,7 @@ Para predecir la satisfaccion se tomaron en cuenta las evidencias halladas en la
 
 # Análisis Descriptivo
 
-```{r, echo=F}
+```{r lectura_datos, echo=F}
 personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=".", encoding="UTF-8")
 salud <- read.csv2("Datos/salud.csv", header=TRUE, dec=".", encoding="UTF-8")
 educacion <- read.csv2("Datos/educacion.csv", header=TRUE, dec=".", encoding="UTF-8")
@@ -101,12 +104,15 @@ serv_hogar <- read.csv2("Datos/servicios_hogar.csv", header=TRUE, dec=".", encod
 fuerza_trabajo <- read.csv2("Datos/fuerza_trabajo.csv", header=TRUE, dec=".", encoding="UTF-8")
 comp_hogar <- read.csv2("Datos/caracteristicas_composicion_del_hogar.csv", header=TRUE, dec=".", encoding="UTF-8")
 ```
-
-## Gráfica
+El primer paso para verificar si las variables anteriores servirán para ajustar algún modelo es hacer un análisis descriptivo de cada una agrupando los niños y abuelos.
 
 ```{r}
-head(personas)
+countedAnswers <- aggregate(. ~ Clasificación, personas, FUN = function(x) sum(!is.na(x)), na.action = NULL)
+print(countedAnswers)
 ```
+Según la tabla anterior las variables que preguntan directamente por la salud no son respondidas por los niños, por lo tanto se decide desarrollar modelos por separado para los niños y los abuelos. 
+## Gráfica
+
 
 ## Matriz de Correlaciones
 
