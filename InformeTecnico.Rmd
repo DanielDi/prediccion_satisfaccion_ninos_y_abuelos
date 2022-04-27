@@ -49,7 +49,8 @@ personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=",")
 ```
 
 # Introducción
-La satisfacción de la vida y la felicidad varía entre países \cite{b2} y juegan un papel importante en el desarrollo de un país.
+La satisfacción de la vida y la felicidad varía entre países \cite{b7} y juegan un papel importante en el desarrollo de un país. Sin embargo, no se logró determinar documentación o estudios relacionados sobre cómo se pueden predecir estos factores en Colombia dados unos parámetros. Por tal motivo, se plantea un realizar un modelo en el cual se involucren variables que afecten la satisfacción de la vida para lograr predecir niveles de esta misma. Para lograr esto, se toma como base una encuesta realizada por el DANE en el 2020: Colombia - Encuesta Nacional de Calidad de Vida - ECV 2020. La población de interés para el equipo fueron los niños y abuelos que fueron entrevistados por el DANE.  
+La estructura del estudio se planteó de la siguiente manera: se hizo una búsqueda exhaustiva sobre documentación para determinar cuáles de las variables que se tenían afectan de manera significativa la satisfacción. Después se planteó un modelo general, sin embargo al revisar las correlaciones entre las variables predictoras se dicidió partir ese modelo general en tres sub-modelos: satisfacción de salud, seguridad y trabajo. Para cada cada uno de estos también se realizó la búsqueda de documentación al respecto. Finalmente, se obtuvieron los resultados y plantearon las conclusiones.
 
 # Descripción del problema
 
