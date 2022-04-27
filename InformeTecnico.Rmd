@@ -42,12 +42,6 @@ require(magrittr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
-
-```{r, echo=F}
-personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=",")
-```
-
 # Introducción 
 
 La satisfacción de la vida y la felicidad varía entre países \cite{b7} y juegan un papel importante en el desarrollo de un país. Sin embargo, no se logró determinar documentación o estudios relacionados sobre cómo se pueden predecir estos factores en Colombia dados unos parámetros. Por tal motivo, se propone el plantemiento, desarrollo, análisis y posterior productización de un modelo con el cual se busca predecir la satisfacción de niños y abuelos. Para lograr esto, se toma como base una encuesta realizada por el DANE en el 2020: Colombia - Encuesta Nacional de Calidad de Vida - ECV 2020. Esta investigación, según el DANE "Busca cuantificar y caracterizar las condiciones socioeconómicas de los hogares colombianos, con el fin de obtener la información necesaria para la actualización de indicadores sociales a nivel de viviendas, hogares y personas, y para la definición de políticas que permitan diseñar y ejecutar planes sociales." (Metodologia ECV, 2009, p.17)   
@@ -96,15 +90,32 @@ Para predecir la satisfaccion se tomaron en cuenta las evidencias halladas en la
 * PERCAPITA
 * COND_VIDA_DEL_HOGAR
 
-## Gráficas
+# Análisis Descriptivo
+
+```{r, echo=F}
+personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=",")
+salud <- read.csv2("Datos/salud.csv", header=TRUE, dec=",")
+educacion <- read.csv2("Datos/educacion.csv", header=TRUE, dec=",")
+cond_hogar <- read.csv2("Datos/condiciones_hogar.csv", header=TRUE, dec=",")
+comp_hogar <- read.csv2("Datos/caracteristicas_composicion_del_hogar.csv", header=TRUE, dec=",")
+datos_vivienda <- read.csv2("Datos/datos_vivienda.csv", header=TRUE, dec=",")
+serv_hogar <- read.csv2("Datos/servicios_hogar.csv", header=TRUE, dec=",")
+fuerza_trabajo <- read.csv2("Datos/fuerza_trabajo.csv", header=TRUE, dec=",")
+```
+
+## Gráfica
+
+```{r}
+head(personas)
+```
 
 ## Matriz de Correlaciones
 
 ```{r,echo=F}
-per_lim<-personas %>% select(-ID_Persona)
-M = cor(per_lim)
-ggcorrplot(M, hc.order = TRUE, type = "lower",
-   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
+#per_lim<-personas %>% select(-ID_Persona)
+#M = cor(per_lim)
+#ggcorrplot(M, hc.order = TRUE, type = "lower",
+#   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
 
 # Conclusiones
