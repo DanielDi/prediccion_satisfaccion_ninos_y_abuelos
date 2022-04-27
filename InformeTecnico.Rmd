@@ -1,26 +1,29 @@
 ---
-title: ""
-author: ""
-date: ""
-output: pdf_document
+title: ''
+author: ''
+date: ''
+lang: 'es'
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 \begin{titlepage}
 \centering
-{\scshape\Huge Informe Tecnico \par}
-{\scshape\Huge  Satisfaccion de Niños y Abuelos \par}
+{\scshape\Huge Informe Técnico \par}
+{\scshape\Huge  Satisfacción de Niños y Abuelos \par}
 \vspace{2cm}
 {\Large Por: \par}
 {\Large Daniel\par}
 {\Large Juan Sebastián Falcón\par}
-{\Large Peña\par}
-{\Large Brayan\par}
+{\Large Juan Felipe Peña Tamayo\par}
+{\Large Brayan M. Ortiz Fajardo\par}
 {\Large Thalea\par}
 \vfill
 \vspace{0.5cm}
 
 ```{r echo=FALSE, out.width = "300px", out.height="150px",fig.align='center'}
 knitr::include_graphics("Imagenes/LOGO.png")
-
 ```
 \vfill
 \vspace{0.5cm}
@@ -41,12 +44,14 @@ require(magrittr)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
-
 ```{r, echo=F}
 personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=",")
 ```
 
+# Introducción
+La satisfacción de la vida y la felicidad varía entre países \cite{b2} y juegan un papel importante en el desarrollo de un país.
+
+# Descripción del problema
 
 # Seleccion de Variables
 
@@ -65,14 +70,15 @@ Para predecir la satisfaccion se tomaron en cuenta las evidencias halladas en la
 * PERCAPITA
 * COND_VIDA_DEL_HOGAR
 
-
-
-
-```{r pressure, echo=FALSE}
-glimpse(personas)
+# Análisis descriptivo
+Con el fin de tener un primer acercamiento sobre la estructura de los datos, se muestran diferentes resultados estadísticos.
+## Resumen estadístico
+```{r, echo=FALSE, comment=""}
+summary(personas)
 ```
+## Gráficas
 
-
+## Matriz de Correlaciones
 
 ```{r,echo=F}
 per_lim<-personas %>% select(-ID_Persona)
@@ -81,4 +87,24 @@ ggcorrplot(M, hc.order = TRUE, type = "lower",
    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
 
+# Conclusiones
+
+# Recomendaciones
+
+\begin{thebibliography}{X}
+\bibitem{b1}
+Ramírez Pérez, Mauricio; Lee Maturana, Sau-Lyn (2012). Factores asociados a la satisfacción vital en adultos mayores de 60 años. Polis (Santiago), 11(33), 407–428. doi:10.4067/s0718-65682012000300020
+\bibitem{b2}
+Kutubaeva RZh (2019) Analysis of life satisfaction of the elderly population on the example of Sweden, Austria and Germany. Population and Economics 3(3): 102-116. https://doi.org/10.3897/popecon.3.e47192
+\bibitem{b3}
+Palmore, E., Luikart, C. (1972). Health and Social Factors Related to Life Satisfaction. Journal of Health and Social Behavior, 13(1), 68–80. doi: 10.2307/2136974
+\bibitem{b4}
+Naidu, Aditi (2009). Factors affecting patient satisfaction and healthcare quality. International Journal of Health Care Quality Assurance, 22(4), 366–381. doi:10.1108/09526860910964834 
+\bibitem{b5}
+ROBLES-GARCIA, Monica et al. Variables relacionadas con la satisfaccion laboral: un estudio transversal a partir del modelo EFQM. Gac Sanit [online]. 2005, vol.19, n.2, pp.127-134. ISSN 0213-9111
+\bibitem{b6}
+Booth, Jaime; Ayers, Stephanie L.; and Marsiglia, Flavio F. (2012) "Perceived Neighborhood Safety and Psychological Distress: Exploring Protective Factors," The Journal of Sociology \& Social Welfare: Vol. 39 : Iss. 4 , Article 8. Available at: https://scholarworks.wmich.edu/jssw/vol39/iss4/
+\bibitem{b7}
+https://ourworldindata.org/happiness-and-life-satisfaction
+\end{thebibliography}
 
