@@ -11,11 +11,11 @@ output: pdf_document
 {\scshape\Huge  Satisfacción de Niños y Abuelos \par}
 \vspace{2cm}
 {\Large Por: \par}
-{\Large Daniel\par}
+{\Large Daniel Espinal Mosquera\par}
 {\Large Juan Sebastián Falcón\par}
 {\Large Juan F. Peña Tamayo\par}
 {\Large Brayan M. Ortiz Fajardo\par}
-{\Large Thalea\par}
+{\Large Thalea Marina Hesse\par}
 \vfill
 \vspace{0.5cm}
 
@@ -48,19 +48,20 @@ knitr::opts_chunk$set(echo = TRUE)
 personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=",")
 ```
 
-# Introduccion 
+# Introducción 
 
-En este documento se busca exponer el plantemiento, desarrollo, analisis y posterior productizacion de un modelo, el cual busca predecir la satisfacción de niños y abuelos, según los datos presentes en la Encuesta de Calidad de Vida del DANE. Esta investigacion, segun el DANE "Busca cuantificar y caracterizar las condiciones socioeconómicas de los hogares colombianos, con el fin de obtener la información necesaria para la actualización de indicadores sociales a nivel de viviendas, hogares y personas, y para la definición de políticas que permitan diseñar y ejecutar planes sociales." (Metodologia ECV, 2009, p.17)
+La satisfacción de la vida y la felicidad varía entre países \cite{b7} y juegan un papel importante en el desarrollo de un país. Sin embargo, no se logró determinar documentación o estudios relacionados sobre cómo se pueden predecir estos factores en Colombia dados unos parámetros. Por tal motivo, se propone el plantemiento, desarrollo, análisis y posterior productización de un modelo con el cual se busca predecir la satisfacción de niños y abuelos. Para lograr esto, se toma como base una encuesta realizada por el DANE en el 2020: Colombia - Encuesta Nacional de Calidad de Vida - ECV 2020. Esta investigación, según el DANE "Busca cuantificar y caracterizar las condiciones socioeconómicas de los hogares colombianos, con el fin de obtener la información necesaria para la actualización de indicadores sociales a nivel de viviendas, hogares y personas, y para la definición de políticas que permitan diseñar y ejecutar planes sociales." (Metodologia ECV, 2009, p.17)   
+La estructura del estudio se planteó de la siguiente manera: se hizo una búsqueda exhaustiva sobre documentación para determinar cuáles de las variables que se tienen afectan de manera significativa la satisfacción. Después se planteó un modelo general, sin embargo al revisar las correlaciones entre las variables predictoras se dicidió partir ese modelo general en tres sub-modelos: satisfacción de salud, seguridad y trabajo. Para cada cada uno de estos también se realizó la búsqueda de documentación al respecto. Adicionalmente, se creó una página web para poder interactuar con los modelos. Finalmente, se obtuvieron los resultados y plantearon las conclusiones. 
 
+# Justificación 
+## Niños
 
-## Justificacion niños
-
-En primera instancia se planteo tomar a los niños en dos grupos, uno como aquellos pertenecientes a la primera infancia (0 a 5 años) y otro con aquellos niños con edad entre 6 y 12 años. Sin embargo, luego se decidio que tomariamos como niño la definicion integrada en el codigo de infancia y adolesencia, donde se expone que "Para todos los efectos de esta ley son sujetos titulares de derechos todas las personas menores de 18 años. Sin perjuicio de lo establecido en el artículo 34 del Código Civil, se entiende por niño o niña las personas entre los 0 y los 12 años, y por adolescente las personas entre 12 y 18 años de edad"(Articulo 3).
+En primera instancia se planteó tomar a los niños en dos grupos, uno como aquellos pertenecientes a la primera infancia (0 a 5 años) y otro con aquellos niños con edad entre 6 y 12 años. Sin embargo, luego se decidio que tomariamos como niño la definicion integrada en el codigo de infancia y adolesencia, donde se expone que "Para todos los efectos de esta ley son sujetos titulares de derechos todas las personas menores de 18 años. Sin perjuicio de lo establecido en el artículo 34 del Código Civil, se entiende por niño o niña las personas entre los 0 y los 12 años, y por adolescente las personas entre 12 y 18 años de edad"(Articulo 3).
 
 Una vez adoptada esta definicion se analizo cuantas observaciones de la ECV cumplian esta condicion, resultando en un total de 56128 niños.
 
 
-## Justificacion abuelos
+## Abuelos
 
 Para los abuelos, al igual que con los niños, se penso inicialmente en tomar un rango de edad que tomara la definicion popular de este colectivo, los adultos de la tercera edad (mayores de 60 años). Sin embargo, luego planteamos que debiamos tener en cuenta cual es la definicion literal de abuelo,  y mediante un sistema de grafos logramos determinar el numero de hombres y mujeres que tenian un nieto. Filtrandolos por su rango edad.
 
