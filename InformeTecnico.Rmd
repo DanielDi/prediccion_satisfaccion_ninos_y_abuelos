@@ -33,7 +33,6 @@ knitr::include_graphics("Imagenes/LOGO.png")
 library(readxl)
 library(dplyr)
 require(ggplot2)
-#library(Hmisc)
 require(corrplot)
 library(reshape2)
 require(kableExtra)
@@ -93,14 +92,14 @@ Para predecir la satisfaccion se tomaron en cuenta las evidencias halladas en la
 # Análisis Descriptivo
 
 ```{r, echo=F}
-personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=",")
-salud <- read.csv2("Datos/salud.csv", header=TRUE, dec=",")
-educacion <- read.csv2("Datos/educacion.csv", header=TRUE, dec=",")
-cond_hogar <- read.csv2("Datos/condiciones_hogar.csv", header=TRUE, dec=",")
-comp_hogar <- read.csv2("Datos/caracteristicas_composicion_del_hogar.csv", header=TRUE, dec=",")
-datos_vivienda <- read.csv2("Datos/datos_vivienda.csv", header=TRUE, dec=",")
-serv_hogar <- read.csv2("Datos/servicios_hogar.csv", header=TRUE, dec=",")
-fuerza_trabajo <- read.csv2("Datos/fuerza_trabajo.csv", header=TRUE, dec=",")
+personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=".", encoding="UTF-8")
+salud <- read.csv2("Datos/salud.csv", header=TRUE, dec=".", encoding="UTF-8")
+educacion <- read.csv2("Datos/educacion.csv", header=TRUE, dec=".", encoding="UTF-8")
+cond_hogar <- read.csv2("Datos/condiciones_hogar.csv", header=TRUE, dec=".", encoding="UTF-8")
+datos_vivienda <- read.csv2("Datos/datos_vivienda.csv", header=TRUE, dec=".", encoding="UTF-8")
+serv_hogar <- read.csv2("Datos/servicios_hogar.csv", header=TRUE, dec=".", encoding="UTF-8")
+fuerza_trabajo <- read.csv2("Datos/fuerza_trabajo.csv", header=TRUE, dec=".", encoding="UTF-8")
+comp_hogar <- read.csv2("Datos/caracteristicas_composicion_del_hogar.csv", header=TRUE, dec=".", encoding="UTF-8")
 ```
 
 ## Gráfica

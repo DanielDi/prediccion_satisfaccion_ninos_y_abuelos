@@ -193,6 +193,8 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+InformeTecnico.html
+InformeTecnico.pdf
 
 # R Environment Variables
 .Renviron
