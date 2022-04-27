@@ -106,10 +106,23 @@ comp_hogar <- read.csv2("Datos/caracteristicas_composicion_del_hogar.csv", heade
 ```
 El primer paso para verificar si las variables anteriores servirán para ajustar algún modelo es hacer un análisis descriptivo de cada una agrupando los niños y abuelos.
 
-```{r}
+```{r,echo=F}
 countedAnswers <- aggregate(. ~ Clasificación, personas, FUN = function(x) sum(!is.na(x)), na.action = NULL)
-print(countedAnswers)
+kable(countedAnswers[,1:8]) %>% 
+  kable_styling(position = "center")%>%
+  kable_styling(latex_options = "HOLD_position") %>% 
+  kable_styling(latex_options="scale_down")
+kable(countedAnswers[,9:15]) %>% 
+  kable_styling(position = "center")%>%
+  kable_styling(latex_options = "HOLD_position") %>% 
+  kable_styling(latex_options="scale_down")
+
 ```
+
+
+
+
+
 Según la tabla anterior las variables que preguntan directamente por la salud no son respondidas por los niños, por lo tanto se decide desarrollar modelos por separado para los niños y los abuelos. 
 ## Gráfica
 
@@ -117,10 +130,10 @@ Según la tabla anterior las variables que preguntan directamente por la salud n
 ## Matriz de Correlaciones
 
 ```{r,echo=F}
-#per_lim<-personas %>% select(-ID_Persona)
-#M = cor(per_lim)
-#ggcorrplot(M, hc.order = TRUE, type = "lower",
-#   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
+per_lim<-personas %>% select(-ID_Persona,-Clasificación,-SEXO) %>% na.omit() 
+M = cor(per_lim)
+ggcorrplot(M, hc.order = TRUE, type = "lower",
+   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
 
 # Conclusiones
