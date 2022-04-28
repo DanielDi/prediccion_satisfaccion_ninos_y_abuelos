@@ -119,22 +119,29 @@ kable(countedAnswers[,9:15]) %>%
 
 ```
 
+Según la tabla anterior las variables que preguntan directamente por la satisfacción no son respondidas por los niños, por lo tanto se decide abordar y desarrollar modelos por separado para niños y abuelos.
 
+## Abuelos
 
+Para empezar la selección de posibles variables objetivo y predictoras de las escogidas anteriormente se desarrolla el siguiente gráfico de correlación:
 
-
-Según la tabla anterior las variables que preguntan directamente por la salud no son respondidas por los niños, por lo tanto se decide desarrollar modelos por separado para los niños y los abuelos. 
-## Gráfica
-
-
-## Matriz de Correlaciones
-
-```{r,echo=F}
-per_lim<-personas %>% select(-ID_Persona,-Clasificación,-SEXO) %>% na.omit() 
-M = cor(per_lim)
+```{r correlación_satisfacción ,echo=F}
+varSatisfaccion <- personas %>% select(-ID_Persona,-Clasificación,-SEXO) %>% na.omit() 
+M = cor(varSatisfaccion)
 ggcorrplot(M, hc.order = TRUE, type = "lower",
    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
+Se evalúa la posibilidad de establecer como posible variable objetivo la satisfacción, esta tiene una buena correlación con las variables de satisfacción pero no con el resto, por lo tanto es posible que no tenga mucho sentido predecir la satisfacción general de un abuelo a partir de todas estas variables. Con base en lo anterior se evalúa la implementación de varios modelos, uno por cada variable de satisfacción.
+
+### Satisfacción de la Salud
+
+Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibles predictores de la satisfacción de la Salud de los abuelos:
+
+* AFILIADO (p6090)
+* PAGO_MENSUAL (p8551)
+* CALIDAD_PRESTADOR (p6181)
+* ESTADO_SALUD (p6127)
+* TIPO_PAGO (p6115)
 
 # Conclusiones
 
