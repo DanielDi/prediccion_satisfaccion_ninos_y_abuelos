@@ -137,78 +137,81 @@ kable(countedAnswers[,9:15]) %>%
 
 Según la tabla anterior las variables que preguntan directamente por la satisfacción no son respondidas por los niños, por lo tanto se decide abordar y desarrollar modelos por separado para niños y abuelos.
 
+```{r, echo = FALSE}
+
+# Se descartan las columnas que no hacen parte de la predicción
+datos <- subset(personas, select = c(SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, 
+                                     NIVEL_DE_EDUCACION, COND_VIDA_DEL_HOGAR, TRABAJO_AUTOPERCIBIDO))
+
+
+# Por facilidad, se renombran las variables a Xi, 1 <= i <= 11
+names(datos) <- c('Y', 'X1','X2', 'X3', 'X4', 'X5')
+datos <- na.omit(datos)
+```
+
 ##### Matriz de Correlaciones
 
 Para empezar la selección de posibles variables objetivo y predictoras de las escogidas anteriormente se desarrolla el siguiente gráfico de correlación:
 
 ```{r correlación_satisfacción ,echo=F}
-varSatisfaccion <- personas %>% select(-ID_Persona,-Clasificación,-SEXO) %>% na.omit() 
-M = cor(varSatisfaccion)
+varsGeneral <- personas %>% select(-ID_Persona,-Clasificación,-SEXO) %>% na.omit() 
+M = cor(varsGeneral)
 ggcorrplot(M, hc.order = TRUE, type = "lower",
    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
 Se evalúa la posibilidad de establecer como posible variable objetivo la satisfacción, esta tiene una buena correlación con las variables de satisfacción pero no con el resto, por lo tanto es posible que no tenga mucho sentido predecir la satisfacción general de un abuelo a partir de todas estas variables. Con base en lo anterior se evalúa la implementación de varios modelos, uno por cada variable de satisfacción.
 
 #### KNN
-```{r, echo=FALSE}
 
+```{r, echo = FALSE}
+# Normalización de los datos
 set.seed(27042022) # se fija por reproducibilidad
 
-datos <- subset(personas, select = c(SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA))
-datos <- na.omit(datos)
-
-# Crea una tabla con falso positivos (FALLA)
-# pre1 <- ifelse(p1 > 0.5, 1, 0)
-#table<-table(Prediction = pre1, Actual = train$admit) 
-#table
-
-# Y_datos <- subset(datos, select = c(SATISFACCION))
-# X_datos <- subset(datos, select = c(SALUD_AUTOPERCIBIDA))
-
-
-# Normalización
-# X_centrada <- scale(X_datos,center = TRUE, scale = TRUE)
-# Y_centrada <- scale(Y_datos,center = TRUE, scale = TRUE)
-
-
-# Determina cuántos K-folds son óptimos
-#aprox1_tr_vl<-train(Y_datos$SATISFACCION~.,
-#             data       = X_centrada,
-#             method     = "knn",
-#             preProcess = c("center","scale"),
-#             tuneGrid   = expand.grid(k = 1:30),
-#            trControl  = ctrl_1,
-#            metric     = "RMSE")
-
-# Entrena el knn con 4 K-folds
-# modelo_knn_k4 <- knnreg(x=X_centrada,y=Y_datos,k=4)
+Y <- datos$Y
+X_centrada <- scale(datos,center = TRUE, scale = TRUE)
+media_total <- attr(X_centrada,'scaled:center')
+desv_est_total <- attr(X_centrada,'scaled:scale')
 ```
+
+```{r, echo = FALSE}
+set.seed(27042022) # se fija por reproducibilidad
+
+# Separación de los datos en entrenamiento y prueba
+datos1 <- sample(2, nrow(datos),
+                   replace = T,
+                    prob = c(0.75, 0.25))
+
+train <- datos[datos1 == 1,]
+test <- datos[datos1 == 2,]
+
+# Modelo de KNN con 4-folds
+modelo_knn_k4 <- knnreg(x=X_centrada,y=Y,k=4)
+
+test$KNN_Predict <- predict(modelo_knn_k4, newdata = test)
+head(test[ , c('Y', 'KNN_Predict')])
+```
+
+
 #### Regresion con lm y glm
 ```{r, echo=FALSE}
 set.seed(27042022) # se fija por reproducibilidad
 
-datos <- subset(personas, select = c(SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, NIVEL_DE_EDUCACION))
-names(datos) <- c('Y', 'X1','X2', 'X3')
-datos <- na.omit(datos)
 
-datos1<-sample(2, nrow(datos),
+# Separación de los datos en entrenamiento y prueba
+datos1 <- sample(2, nrow(datos),
                    replace = T,
-                 prob = c(0.6, 0.4))
-train<-datos[datos1 == 1,]
-test<-datos[datos1 == 2,]
+                   prob = c(0.75, 0.25))
 
-df <- data.frame(X1=c(8), X2=c(8), X3=(8))
+train <- datos[datos1 == 1,]
+test <- datos[datos1 == 2,]
 
-#Train
-lm1 = lm(formula = Y ~ X1 + X2 + X3, data=train)
-glm1 = glm(formula = Y ~ X1 + X2 + X3, data=train)
+# Train
+
+lm1 <- lm(formula = Y ~ . , data=train )
 summary(lm1)
-summary(glm1)
 
-p1 <- predict(lm1, newdata=df)
-p2 <- predict(glm1, newdata=df)
-print(p1)
-print(p2)
+test$Y_Predict <- predict(lm1, newdata=test)
+print(test[ , c('Y', 'Y_Predict')])
 ```
 
 ### Satisfacción en la Salud
