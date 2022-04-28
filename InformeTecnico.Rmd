@@ -1,9 +1,11 @@
 ---
-title: ""
-author: ""
-date: ""
-lang: "es"
-output: pdf_document
+title: ''
+author: ''
+date: ''
+output:
+  html_document:
+    df_print: paged
+lang: es
 ---
 \begin{titlepage}
 \centering
@@ -152,43 +154,8 @@ Se evalúa la posibilidad de establecer como posible variable objetivo la satisf
 
 set.seed(27042022) # se fija por reproducibilidad
 
-# ctrl_1<-trainControl(method = "LGOCV",p=0.75,number = 1)
-
 datos <- subset(personas, select = c(SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA))
 datos <- na.omit(datos)
-
-datos <- transform(datos, SATISFACCION = as.factor(SATISFACCION),
-                   SALUD_AUTOPERCIBIDA = as.factor(SALUD_AUTOPERCIBIDA),
-                   SEGURIDAD_AUTOPERCIBIDA = as.factor(SEGURIDAD_AUTOPERCIBIDA))
-
-
-
-# Convierte los datos a factor para analizar los con regresión.
-datos$SATISFACCION = as.factor(datos$SATISFACCION)
-datos$SALUD_AUTOPERCIBIDA = as.factor(datos$SALUD_AUTOPERCIBIDA)
-datos$SEGURIDAD_AUTOPERCIBIDA = as.factor(datos$SEGURIDAD_AUTOPERCIBIDA)
-
-# Cuenta cuántos 
-xtabs(~datos$SATISFACCION + datos$SALUD_AUTOPERCIBIDA, data = datos)
-
-
-set.seed(1234)
-datos1<-sample(2, nrow(datos),
-                   replace = T,
-                 prob = c(0.6, 0.4))
-train<-datos[datos1 == 1,]
-test<-datos[datos1 == 2,]
-
-# Entrenamiento
-mymodel<-glm(datos$SALUD_AUTOPERCIBIDA~datos$SEGURIDAD_AUTOPERCIBIDA+datos$SALUD_AUTOPERCIBIDA,
-                        data = train,
-                        family = 'binomial')
-summary(mymodel)
-
-# Predicción
-p1<-predict(mymodel, test,
-            type = 'response')
-head(p1)
 
 # Crea una tabla con falso positivos (FALLA)
 # pre1 <- ifelse(p1 > 0.5, 1, 0)
@@ -216,7 +183,33 @@ head(p1)
 # Entrena el knn con 4 K-folds
 # modelo_knn_k4 <- knnreg(x=X_centrada,y=Y_datos,k=4)
 ```
+#### Regresion con lm y glm
+```{r, echo=FALSE}
+set.seed(27042022) # se fija por reproducibilidad
 
+datos <- subset(personas, select = c(SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, NIVEL_DE_EDUCACION))
+names(datos) <- c('Y', 'X1','X2', 'X3')
+datos <- na.omit(datos)
+
+datos1<-sample(2, nrow(datos),
+                   replace = T,
+                 prob = c(0.6, 0.4))
+train<-datos[datos1 == 1,]
+test<-datos[datos1 == 2,]
+
+df <- data.frame(X1=c(8), X2=c(8), X3=(8))
+
+#Train
+lm1 = lm(formula = Y ~ X1 + X2 + X3, data=train)
+glm1 = glm(formula = Y ~ X1 + X2 + X3, data=train)
+summary(lm1)
+summary(glm1)
+
+p1 <- predict(lm1, newdata=df)
+p2 <- predict(glm1, newdata=df)
+print(p1)
+print(p2)
+```
 
 ### Satisfacción en la Salud
 
