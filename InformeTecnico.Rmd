@@ -5,6 +5,7 @@ date: ''
 output:
   html_document:
     df_print: paged
+  pdf_document: default
 lang: es
 ---
 \begin{titlepage}
@@ -211,7 +212,7 @@ lm1 <- lm(formula = Y ~ . , data=train )
 summary(lm1)
 
 test$Y_Predict <- predict(lm1, newdata=test)
-print(test[ , c('Y', 'Y_Predict')])
+head(test[ , c('Y', 'Y_Predict')])
 ```
 
 ### Satisfacción en la Salud
