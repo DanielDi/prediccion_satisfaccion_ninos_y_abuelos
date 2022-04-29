@@ -193,6 +193,7 @@ head(test[ , c('Y', 'KNN_Predict')])
 ```
 
 
+
 #### Regresion con lm y glm
 ```{r, echo=FALSE}
 set.seed(27042022) # se fija por reproducibilidad
@@ -220,10 +221,58 @@ head(test[ , c('Y', 'Y_Predict')])
 Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibles predictores de la satisfacción de la Salud de los abuelos:
 
 * AFILIADO (p6090)
-* PAGO_MENSUAL (p8551)
+* PAGO_EPS (p8551)
 * CALIDAD_PRESTADOR (p6181)
 * ESTADO_SALUD (p6127)
 * TIPO_PAGO (p6115)
+
+#### Análisis Descriptivo
+```{r, echo = FALSE}
+# Une las tablas
+df_salud <- merge(x = comp_hogar, y = salud, by = "ID_Persona")
+df_salud <- merge(x = datos_vivienda, y = df_salud, by = "DIRECTORIO")
+
+# Selecciona solo las personas de 3era edad
+df_salud <- subset(df_salud, df_salud$Clasificación == "3ra_edad")
+
+# Selecciona las variables de interés
+df_salud <- subset(df_salud, select = c("P1897", "P8551", "P6181", "P6127", "P8520S1A1"))
+df_salud <- na.omit(df_salud)
+
+# Cambia los nombres de las columnas
+names(df_salud) = c("SATISFACCION", "PAGO_EPS", "CALIDAD_EPS", "ESTADO_SALUD", "ESTRATO")
+head(df_salud)
+```
+
+##### Matriz de Correlaciones
+```{r, echo = FALSE}
+M <- cor(df_salud)
+ggcorrplot(M, hc.order = TRUE, type = "lower",
+   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
+```
+
+
+#### Regresion con lm
+```{r, echo=FALSE}
+set.seed(27042022) # se fija por reproducibilidad
+
+
+# Separación de los datos en entrenamiento y prueba
+datos_salud <- sample(2, nrow(df_salud),
+                   replace = T,
+                   prob = c(0.75, 0.25))
+
+train_salud <- df_salud[datos_salud == 1,]
+test_salud <- df_salud[datos_salud == 2,]
+
+# Train
+head(train_salud)
+lm1 <- lm(formula = SATISFACCION ~ . , data=train_salud)
+summary(lm1)
+
+test_salud$Y_Predict <- predict(lm1, newdata=test_salud)
+head(test_salud[ , c('SATISFACCION', 'Y_Predict')])
+```
 
 ### Satisfacción sobre el Nivel de Seguridad
 
