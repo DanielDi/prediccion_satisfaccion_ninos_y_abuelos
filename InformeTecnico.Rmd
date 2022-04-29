@@ -406,17 +406,26 @@ corr_ninos <- ninos %>% select(Satisfaccion, SALUD_AUTOPERCIBIDA, Actividades, P
 M = cor(corr_ninos, use = "pairwise.complete.obs")
 M[is.na(M)]=0
  ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6, pch.col = "red",lab_size = 2)
- head(ninos)
+head(ninos)
 ```
 
 Los datos para nin~os:
 ```{r}
-df_ninos <- ninos %>% select(Edad)
+#KNN P6167 - Minutos para escuela, ValorBeca, PERCAPITA
+df_ninos <- ninos %>% select(Edad, CANT_PERSONAS_HOGAR, incap)
 df_ninos['ETNIA'] = as.factor(ninos[,'ETNIA'])
 df_ninos['Vive_con_Padre'] = factor(ninos[,'P6081'], labels = c(TRUE, FALSE, 'Muerto'))
 df_ninos['Vive_con_Madre'] = factor(ninos[,'P6083'], labels = c(TRUE, FALSE, 'Muerto'))
 df_ninos['Escuela_Typo'] = factor(ninos[,'P5673'], labels = c('Oficial', 'conSubstito', 'SinSubstito'))
 df_ninos['Escuela_Lugar'] = ninos[,'P5673']
+df_ninos['Beca'] = ninos[,'P8610S1'] # KNN!
+df_ninos['Medio_transporte'] = addNA(factor(ninos[,'P4693'], labels = c('Carro', 'escolar', 'público','pie', 'Bicicleta', 'Caballo', 'canoa', 'Otro')))
+df_ninos['Medio_transporte'] = addNA(factor(ninos[,'P4693'], labels = c('Carro', 'escolar', 'público','pie', 'Bicicleta', 'Caballo', 'canoa', 'Otro')))
+df_ninos['enfermedad crónica'] =  addNA(factor(ninos[,'P1930'], labels = c(TRUE, FALSE)))
+df_ninos['Ingrso'] = ninos[,'P9090']
+df_ninos['Vida_Hogar'] = ninos[,'P9030']
+df_ninos['Hacer_Pricipal'] = addNA(factor(ninos[,'P400'], labels = c(	'Trabajando','Buscando','Estudiando', 'Oficios_hogar', 'Incapacitado trabajar','Otra')))
+df_ninos['Lugar_de_Trabajo'] = addNA(factor(ninos[,'P420'], labels = c('no trabajo','la vivienda', 'otra vivienda', 'Puerta', 'calle', 'oficina','campo', 'obra')))
 
 head(df_ninos)
 ```
