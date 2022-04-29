@@ -192,8 +192,6 @@ test$KNN_Predict <- predict(modelo_knn_k4, newdata = test)
 head(test[ , c('Y', 'KNN_Predict')])
 ```
 
-
-
 #### Regresion con lm y glm
 ```{r, echo=FALSE}
 set.seed(27042022) # se fija por reproducibilidad
@@ -231,7 +229,7 @@ Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibl
 # Une las tablas
 df_salud <- merge(x = comp_hogar, y = salud, by = "ID_Persona")
 df_salud <- merge(x = datos_vivienda, y = df_salud, by = "DIRECTORIO")
-
+head(df_salud)
 # Selecciona solo las personas de 3era edad
 df_salud <- subset(df_salud, df_salud$Clasificación == "3ra_edad")
 
@@ -275,6 +273,64 @@ head(test_salud[ , c('SATISFACCION', 'Y_Predict')])
 ```
 
 ### Satisfacción sobre el Nivel de Seguridad
+Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibles predictores de la satisfacción de la seguridad de los abuelos:
+
+* ESTADO_CIVIL (P5502)
+* SEXO (P6020´)
+* ESTRATO (P8520S1A1)
+* INGRESOS (P8624)
+* HORAS_LABORALES (P415)
+* NIVEL_DE_SEGURIDAD (P9010)
+* CONDICIONES_DE_VIDA_HOGAR (P9030)
+
+#### Análisis Descriptivo
+```{r, echo = FALSE}
+# Une las tablas
+df_trabajo <- merge(x = comp_hogar, y = fuerza_trabajo, by = "ID_Persona")
+df_trabajo <- merge(x = df_trabajo, y = cond_hogar, by = "ID_Hogar")
+df_trabajo <- merge(x = df_trabajo, y = datos_vivienda, by = "DIRECTORIO")
+
+head(df_trabajo)
+# Selecciona solo las personas de 3era edad
+df_trabajo <- subset(df_trabajo, df_trabajo$Clasificación == "3ra_edad")
+
+# Selecciona las variables de interés
+df_trabajo <- subset(df_trabajo, select = c("P1898", "P5502", "P6020", "P8520S1A1", 
+                                        "P8624", "P415", "P9010", "P9030"))
+df_trabajo <- na.omit(df_trabajo)
+
+# Cambia los nombres de las columnas
+names(df_trabajo) = c("SATISFACCION", "ESTADO_CIVIL", "SEXO", "ESTRATO", "INGRESOS",
+                      "HORAS_LABORALES", "NIVEL_DE_SEGURIDAD", "CONDICIONES_DE_VIDA_HOGAR")
+head(df_trabajo)
+```
+
+##### Matriz de Correlaciones
+```{r, echo = FALSE}
+M <- cor(df_trabajo)
+ggcorrplot(M, hc.order = TRUE, type = "lower",
+   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
+```
+#### Regresion con lm
+```{r, echo=FALSE}
+set.seed(27042022) # se fija por reproducibilidad
+
+
+# Separación de los datos en entrenamiento y prueba
+datos_trabajo <- sample(2, nrow(df_trabajo),
+                   replace = T,
+                   prob = c(0.75, 0.25))
+
+train_trabajo <- df_trabajo[datos_trabajo == 1,]
+test_trabajo <- df_trabajo[datos_trabajo == 2,]
+
+# Train
+lm1 <- lm(formula = SATISFACCION ~ . , data=train_trabajo)
+summary(lm1)
+
+test_trabajo$Y_Predict <- predict(lm1, newdata=test_trabajo)
+head(test_trabajo[ , c('SATISFACCION', 'Y_Predict')])
+```
 
 ### Satisfacción en el Trabajo
 
