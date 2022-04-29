@@ -83,11 +83,11 @@ Menor a 60 años & 1049 \\ \hline
 
 Se observa que con la definicion inicial estabamos omitiendo un total de 1049 observaciones, ademas, se observa que los abuelos resgitrados en la base de datos son relativamente pocos pues solo representan el x% del total de personas.
 
-Ante esta situacion tomamos la desicion de ...
+Ante esta situación tomamos la desicion de ...
 
 # Seleccion de Variables
 
-Para predecir la satisfaccion se tomaron en cuenta las evidencias halladas en la bibliografia, donde se encontro que las variables relacionadas con el nivel de satisfaccion de una persona son las siguientes:
+Para predecir la satisfacción se tomaron en cuenta las evidencias halladas en la bibliografía, donde se encontró que las variables relacionadas con el nivel de satisfacción de una persona son las siguientes:
 
 * NIVEL_DE_EDUCACION
 * SEXO
@@ -219,6 +219,18 @@ summary(lm1)
 
 test$Y_Predict <- predict(lm1, newdata=test)
 head(test[ , c('Y', 'Y_Predict')])
+entrada <- data.frame(x1=3,
+                      x2=3,
+                      x3=3,
+                      x4=3,
+                      x5=3)
+salida <- predict(lm1,newdata = entrada)
+print(salida)
+# Conexión con la aplicación
+#SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, 
+#                                     NIVEL_DE_EDUCACION, COND_VIDA_DEL_HOGAR, TRABAJO_AUTOPERCIBIDO
+save(file="App/modeloSatisfaccion.RData",
+                              list=c("lm1"))
 ```
 
 ### Satisfacción en la Salud
@@ -376,9 +388,9 @@ head(df_trabajo)
 
 ##### Matriz de Correlaciones
 ```{r, echo = FALSE}
-M <- cor(df_trabajo)
-ggcorrplot(M, hc.order = TRUE, type = "lower",
-   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
+# M <- cor(df_trabajo)
+# ggcorrplot(M, hc.order = TRUE, type = "lower",
+#    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
 #### Regresion con lm
 ```{r, echo=FALSE}
