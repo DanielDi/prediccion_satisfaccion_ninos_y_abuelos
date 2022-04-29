@@ -369,7 +369,7 @@ head(df_trabajo)
 
 ##### Matriz de Correlaciones
 ```{r, echo = FALSE}
-M <- cor(df_trabajo)
+M <- cor(df_trabajo, use="pairwise.complete.obs")
 ggcorrplot(M, hc.order = TRUE, type = "lower",
    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
@@ -394,6 +394,39 @@ test_trabajo$Y_Predict <- predict(lm1, newdata=test_trabajo)
 head(test_trabajo[ , c('SATISFACCION', 'Y_Predict')])
 ```
 ## Modelos Predictivos en Niños
+```{r}
+# los datos:
+ninos <- read.csv2("Datos/datos_ninos.csv", header=TRUE, dec=".", encoding="UTF-8")
+```
+### Correlaciones
+```{r}
+corr_ninos <- ninos %>% select(Satisfaccion, SALUD_AUTOPERCIBIDA, Actividades, P9030, P9090, P8610S1, P5673, P6238, P6223, PERCAPITA, ETNIA, CANT_PERSONAS_HOGAR, P400, P420, P4693, P6167 , P1930, incap)
+M = cor(corr_ninos, use = "pairwise.complete.obs")
+M[is.na(M)]=0
+ ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6, pch.col = "red",lab_size = 2)
+```
+```{r}
+# Normalisierung - si es necesario
+#Y <- datos$Y
+#X_centrada <- scale(datos,center = TRUE, scale = TRUE)
+#media_total <- attr(X_centrada,'scaled:center')
+#desv_est_total <- attr(X_centrada,'scaled:scale')
+
+# Separación de los datos en entrenamiento y prueba
+datos1 <- sample(2, nrow(datos),
+                   replace = T,
+                    prob = c(0.75, 0.25))
+
+train <- datos[datos1 == 1,]
+test <- datos[datos1 == 2,]
+
+# Modelo de KNN con 4-folds
+modelo_knn_k4 <- knnreg(x=X_centrada,y=Y,k=4)
+
+test$KNN_Predict <- predict(modelo_knn_k4, newdata = test)
+head(test[ , c('Y', 'KNN_Predict')])
+```
+
 
 # Conclusiones
 
