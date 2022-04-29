@@ -286,22 +286,84 @@ Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibl
 #### Análisis Descriptivo
 ```{r, echo = FALSE}
 # Une las tablas
-df_trabajo <- merge(x = comp_hogar, y = fuerza_trabajo, by = "ID_Persona")
-df_trabajo <- merge(x = df_trabajo, y = cond_hogar, by = "ID_Hogar")
-df_trabajo <- merge(x = df_trabajo, y = datos_vivienda, by = "DIRECTORIO")
+df_seguridad <- merge(x = comp_hogar, y = fuerza_trabajo, by = "ID_Persona")
+df_seguridad <- merge(x = df_seguridad, y = cond_hogar, by = "ID_Hogar")
+df_seguridad <- merge(x = df_seguridad, y = datos_vivienda, by = "DIRECTORIO")
 
-head(df_trabajo)
+head(df_seguridad)
+# Selecciona solo las personas de 3era edad
+df_seguridad <- subset(df_seguridad, df_seguridad$Clasificación == "3ra_edad")
+
+# Selecciona las variables de interés
+df_seguridad <- subset(df_seguridad, select = c("P1898", "P5502", "P6020", "P8520S1A1", 
+                                        "P8624", "P415", "P9010", "P9030"))
+df_seguridad <- na.omit(df_seguridad)
+
+# Cambia los nombres de las columnas
+names(df_seguridad) = c("SATISFACCION", "ESTADO_CIVIL", "SEXO", "ESTRATO", "INGRESOS",
+                      "HORAS_LABORALES", "NIVEL_DE_SEGURIDAD", "CONDICIONES_DE_VIDA_HOGAR")
+head(df_seguridad)
+```
+
+##### Matriz de Correlaciones
+```{r, echo = FALSE}
+M <- cor(df_seguridad)
+ggcorrplot(M, hc.order = TRUE, type = "lower",
+   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
+```
+#### Regresion con lm
+```{r, echo=FALSE}
+set.seed(27042022) # se fija por reproducibilidad
+
+
+# Separación de los datos en entrenamiento y prueba
+datos_seguridad <- sample(2, nrow(df_seguridad),
+                   replace = T,
+                   prob = c(0.75, 0.25))
+
+train_seguridad <- df_seguridad[datos_seguridad == 1,]
+test_seguridad <- df_seguridad[datos_seguridad == 2,]
+
+# Train
+lm1 <- lm(formula = SATISFACCION ~ . , data=train_seguridad)
+summary(lm1)
+
+test_seguridad$Y_Predict <- predict(lm1, newdata=test_seguridad)
+head(test_seguridad[ , c('SATISFACCION', 'Y_Predict')])
+```
+
+### Satisfacción en el Trabajo
+Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibles predictores de la satisfacción en el trabajo de los abuelos:
+
+* SEXO (P6020´)
+* CARGO (P6435)
+* TIENE_CONTRATO (P6440)
+* TIPO_CONTRATO (P6460)
+* SALARIO (P8624)
+* HORAS_LABORALES (P415)
+* CONTRIBUYENTE (P6115)
+* CONDICIONES_DE_VIDA_HOGAR (P9030)
+
+#### Análisis Descriptivo
+```{r, echo = FALSE}
+# Une las tablas
+df_trabajo <- merge(x = comp_hogar, y = fuerza_trabajo, by = "ID_Persona")
+df_trabajo <- merge(x = df_trabajo, y = salud, by = "ID_Persona")
+df_trabajo <- merge(x = df_trabajo, y = cond_hogar, by = "ID_Hogar")
+
+
 # Selecciona solo las personas de 3era edad
 df_trabajo <- subset(df_trabajo, df_trabajo$Clasificación == "3ra_edad")
 
 # Selecciona las variables de interés
-df_trabajo <- subset(df_trabajo, select = c("P1898", "P5502", "P6020", "P8520S1A1", 
-                                        "P8624", "P415", "P9010", "P9030"))
+df_trabajo <- subset(df_trabajo, select = c("P1899", "P6020", "P6435", "P6440", 
+                                        "P6460", "P415", "P6115", "P9030", "P8624"))
+head(df_trabajo)
 df_trabajo <- na.omit(df_trabajo)
 
 # Cambia los nombres de las columnas
-names(df_trabajo) = c("SATISFACCION", "ESTADO_CIVIL", "SEXO", "ESTRATO", "INGRESOS",
-                      "HORAS_LABORALES", "NIVEL_DE_SEGURIDAD", "CONDICIONES_DE_VIDA_HOGAR")
+names(df_trabajo) = c("SATISFACCION", "SEXO", "CARGO", "TIENE_CONTRATO", "TIPO_CONTRATO",
+                      "SALARIO", "HORAS_LABORALES", "CONTRIBUYENTE", "CONDICIONES_DE_VIDA_HOGAR")
 head(df_trabajo)
 ```
 
@@ -331,9 +393,6 @@ summary(lm1)
 test_trabajo$Y_Predict <- predict(lm1, newdata=test_trabajo)
 head(test_trabajo[ , c('SATISFACCION', 'Y_Predict')])
 ```
-
-### Satisfacción en el Trabajo
-
 ## Modelos Predictivos en Niños
 
 # Conclusiones
