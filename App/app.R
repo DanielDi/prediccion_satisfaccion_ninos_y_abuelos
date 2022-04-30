@@ -9,7 +9,7 @@
 
 library(shiny)
 library(caret)
-load("modeloSatisfaccion.RData")
+load("data/modeloSatisfaccion.RData")
 # Define UI for application that draws a histogram
 ui <- fluidPage(
   

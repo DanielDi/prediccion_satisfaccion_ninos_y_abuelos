@@ -230,7 +230,7 @@ print(salida)
 # Conexión con la aplicación
 #SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, 
 #                                     NIVEL_DE_EDUCACION, COND_VIDA_DEL_HOGAR, TRABAJO_AUTOPERCIBIDO
-save(file="App/modeloSatisfaccion.RData",
+save(file="App/data/modeloSatisfaccion.RData",
                               list=c("lm1"))
 ```
 
