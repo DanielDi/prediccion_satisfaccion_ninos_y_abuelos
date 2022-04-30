@@ -421,10 +421,10 @@ ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6,
 
 Los datos para niños:
 ```{r}
-#KNN P6167 - Minutos para escuela, ValorBeca, PERCAPITA
+#KNN Minutos para escuela, ValorBeca, PERCAPITA
 
 df_ninos <- ninos %>% select(EDAD, CANT_PERSONAS_HOGAR, INCAP, SATISFACCION, 
-                             PERCAPITA)
+                             PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, UBICACION_ESCUELA, CONDIC_VIDA_HOGAR)
 
 df_ninos['ETNIA'] = as.factor(ninos[,'ETNIA'])
 
@@ -474,7 +474,7 @@ test <- df_ninos[datos1 == 2,]
 
 # Modelo de arbol de decicion
 modelo <- ctree(formula = SATISFACCION ~ ., data=train, 
-                controls = ctree_control(mincriterion = 0.89))
+                controls = ctree_control(mincriterion = 0.9))
 
 
 test_pred <- predict(modelo, newdata = test)
@@ -489,7 +489,7 @@ test_pred <- cbind(test_pred, test['SATISFACCION'])
 head(test_pred)
 ```
 ```{r}
-#png(file = "decision_tree.png", width = 3000, height = 1500, )
+png(file = "decision_tree.png", width = 3000, height = 1500, )
 plot(modelo)
 dev.off()
 modelo
