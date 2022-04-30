@@ -494,14 +494,18 @@ modelo
 test_pred <- predict(modelo2, newdata = test)
 colnames(test_pred) <- c('pred_Satisfaccion')
 test_pred <- cbind(test_pred, test['SATISFACCION'])
-table(lapply(test_pred/5.6, as.integer))
+
+cat_test_pred = lapply(test_pred/5.6, as.integer)
+table(cat_test_pred)
 ```
 
 ```{r}
 train_pred <- predict(modelo2, newdata = train)
 colnames(train_pred) <- c('pred_Satisfaccion')
 train_pred <- cbind(train_pred, train['SATISFACCION'])
-table(lapply(train_pred/5.6, as.integer))
+
+cat_train_pred = lapply(train_pred/5.6, as.integer)
+table(cat_train_pred)
 ```
 calculate MSE
 ```{r}
@@ -512,6 +516,15 @@ print(mean(train_pred$SATISFACCION)^2)
 
 print('MSE test:' )
 print(mean((test_pred$SATISFACCION - test_pred$pred_Satisfaccion)^2))
+
+
+print('Para las 10 categorias: MSE:' )
+print(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2))
+print('MS:' )
+print(mean(cat_train_pred$SATISFACCION)^2)
+
+print('MSE test:' )
+print(mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2))
 ```
 
 
