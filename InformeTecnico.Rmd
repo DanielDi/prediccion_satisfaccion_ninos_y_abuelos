@@ -406,70 +406,62 @@ corr_ninos <- ninos %>% select(Satisfaccion, SALUD_AUTOPERCIBIDA, Actividades, P
 M = cor(corr_ninos, use = "pairwise.complete.obs")
 M[is.na(M)]=0
  ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6, pch.col = "red",lab_size = 2)
-head(ninos)
+
 ```
 
 Los datos para nin~os:
 ```{r}
 #KNN P6167 - Minutos para escuela, ValorBeca, PERCAPITA
-df_ninos <- ninos %>% select(Edad, CANT_PERSONAS_HOGAR, incap)
+df_ninos <- ninos %>% select(Edad, CANT_PERSONAS_HOGAR, incap, Satisfaccion, PERCAPITA)
 df_ninos['ETNIA'] = as.factor(ninos[,'ETNIA'])
 df_ninos['Vive_con_Padre'] = factor(ninos[,'P6081'], labels = c(TRUE, FALSE, 'Muerto'))
 df_ninos['Vive_con_Madre'] = factor(ninos[,'P6083'], labels = c(TRUE, FALSE, 'Muerto'))
 df_ninos['Escuela_Typo'] = factor(ninos[,'P5673'], labels = c('Oficial', 'conSubstito', 'SinSubstito'))
 df_ninos['Escuela_Lugar'] = ninos[,'P5673']
-df_ninos['Beca'] = ninos[,'P8610S1'] # KNN!
+df_ninos['Beca'] = ninos[,'P8610S1'] 
 df_ninos['Medio_transporte'] = addNA(factor(ninos[,'P4693'], labels = c('Carro', 'escolar', 'público','pie', 'Bicicleta', 'Caballo', 'canoa', 'Otro')))
-df_ninos['Medio_transporte'] = addNA(factor(ninos[,'P4693'], labels = c('Carro', 'escolar', 'público','pie', 'Bicicleta', 'Caballo', 'canoa', 'Otro')))
-df_ninos['enfermedad crónica'] =  addNA(factor(ninos[,'P1930'], labels = c(TRUE, FALSE)))
-df_ninos['Ingrso'] = ninos[,'P9090']
+df_ninos['enfermedad_crónica'] =  addNA(factor(ninos[,'P1930'], labels = c(TRUE, FALSE)))
+df_ninos['Ingreso'] = ninos[,'P9090']
 df_ninos['Vida_Hogar'] = ninos[,'P9030']
 df_ninos['Hacer_Pricipal'] = addNA(factor(ninos[,'P400'], labels = c(	'Trabajando','Buscando','Estudiando', 'Oficios_hogar', 'Incapacitado trabajar','Otra')))
 df_ninos['Lugar_de_Trabajo'] = addNA(factor(ninos[,'P420'], labels = c('no trabajo','la vivienda', 'otra vivienda', 'Puerta', 'calle', 'oficina','campo', 'obra')))
 
 head(df_ninos)
 ```
+## Resultados del entrenamiento
 ```{r}
-# Normalisierung - si es necesario
-#Y <- datos$Y
-#X_centrada <- scale(datos,center = TRUE, scale = TRUE)
-#media_total <- attr(X_centrada,'scaled:center')
-#desv_est_total <- attr(X_centrada,'scaled:scale')
 
 # Separación de los datos en entrenamiento y prueba
-datos1 <- sample(2, nrow(ninos),
+datos1 <- sample(2, nrow(df_ninos),
                    replace = TRUE,
                     prob = c(0.75, 0.25))
 
-train <- ninos[datos1 == 1,]
-test <- ninos[datos1 == 2,]
+train <- df_ninos[datos1 == 1,]
+test <- df_ninos[datos1 == 2,]
 
 # Modelo de arbol de decicion
-modelo <- ctree(formula = Satisfaccion ~ P420 + P9030 + P9090 + P8610S1 + P5673 +P6238 +P6223 +PERCAPITA + ETNIA+ CANT_PERSONAS_HOGAR + P400 + P4693+P6167+ P1930+incap, data=train)
+modelo <- ctree(formula = Satisfaccion ~ ., data=train, controls = ctree_control(mincriterion = 0.89))
 
-
-modelo2 <- ctree(formula = Satisfaccion ~ P420 + P8610S1+ Edad + P400 + trabaja +incap, data=train)
 
 test_pred <- predict(modelo, newdata = test)
 colnames(test_pred) <- c('pred_Satisfaccion')
 test_pred <- cbind(test_pred, test['Satisfaccion'])
-test_pred[test['X']==23639]
 
+#modelo2 <- ctree(formula = Satisfaccion ~ Hacer_Pricipal + Lugar_de_Trabajo + Medio_transporte +Edad , data=train, controls = ctree_control(mincriterion = 0.7))
 
-t <- predict(modelo2, newdata = test)
-colnames(t) <- c('pred_Satisfaccion_2')
-test_pred <- cbind(test_pred, t)
+#t <- predict(modelo2, newdata = test)
+#colnames(t) <- c('pred_Satisfaccion_3')
+#test_pred <- cbind(test_pred, t)
 head(test_pred)
 ```
 ```{r}
-png(file = "decision_tree2.png", width = 3000, height = 1500, )
-plot(modelo2, asp=1)
+png(file = "decision_tree.png", width = 3000, height = 1500, )
+plot(modelo)
 dev.off()
 modelo
 
 # used variables: P9090,P6223,P9030, PERCAPITA, P1930, ETNIA, P6167, incap, CANT_PERSONAS_HOGAR, P5673, P400,P4693
 # variables inútiles: P8610S1, P6238,   P420
-
 ```
 
 
