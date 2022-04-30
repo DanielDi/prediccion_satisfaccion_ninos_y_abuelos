@@ -285,11 +285,14 @@ test_salud <- df_salud[datos_salud == 2,]
 
 # Train
 head(train_salud)
-lm1 <- lm(formula = SATISFACCION ~ . , data=train_salud)
+lm_salud <- lm(formula = SATISFACCION ~ . , data=train_salud)
 summary(lm1)
 
-test_salud$Y_Predict <- predict(lm1, newdata=test_salud)
+test_salud$Y_Predict <- predict(lm_salud, newdata=test_salud)
 head(test_salud[ , c('SATISFACCION', 'Y_Predict')])
+
+save(file="App/data/modeloSatisfaccionSalud.RData",
+                              list=c("lm_salud"))
 ```
 
 ### Satisfacción sobre el Nivel de Seguridad
@@ -428,7 +431,7 @@ M[is.na(M)]=0
 
 ```
 
-Los datos para nin~os:
+Los datos para niños:
 ```{r}
 #KNN P6167 - Minutos para escuela, ValorBeca, PERCAPITA
 df_ninos <- ninos %>% select(Edad, CANT_PERSONAS_HOGAR, incap, Satisfaccion, PERCAPITA)

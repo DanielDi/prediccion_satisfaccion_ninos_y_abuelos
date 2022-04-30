@@ -12,6 +12,7 @@ library(caret)
 library(shinydashboard)
 library(shinythemes)
 load("data/modeloSatisfaccion.RData")
+load("data/modeloSatisfaccionSalud.RData")
 # Define UI for application that draws a histogram
 
 ui <- fluidPage(theme=shinytheme("superhero"),
@@ -23,23 +24,36 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                      fluidPage(
                                        
                                        # Application title
-                                       titlePanel("PredicciÃ³n de la SatisfacciÃ³n"),
+                                       titlePanel("Predicción de la Satisfacción"),
                                        
                                        # Sidebar with a slider input for number of bins 
                                        sidebarLayout(
                                          sidebarPanel(
+                                           selectInput("pagoEps", "Quien paga la afiliacion", label="¿Quién paga la afiliación?",
+                                                       choices = list("Paga una parte y la otra la empresa"=1,
+                                                                      "Le descuentan la pension"=2,
+                                                                      "Paga la totalidad de la afiliacion"=3,
+                                                                      "Paga completamente la empresa"=4,
+                                                                      "No paga, es beneficiario "=5)),
+                                           sliderInput("calidadEps",
+                                                       "¿Cómo considera la calidad del prestador de salud?",
+                                                       min = 5,
+                                                       max = 1,
+                                                       value = 1),
+                                           
                                            sliderInput("nvSalud",
-                                                       "SatisfacciÃ³n de Salud",
+                                                       "Satisfacción de Salud",
                                                        min = 0,
                                                        max = 10,
                                                        value = 1),
+
                                            sliderInput("nvSeguridad",
-                                                       "SatisfacciÃ³n de Seguridad",
+                                                       "Satisfacción de Seguridad",
                                                        min = 0,
                                                        max = 10,
                                                        value = 1),
                                            sliderInput("nvEducacion",
-                                                       "SatisfacciÃ³n de EducaciÃ³n",
+                                                       "Satisfacción de Educación",
                                                        min = 1,
                                                        max = 9,
                                                        value = 1),
@@ -55,6 +69,7 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                                        value = 1)
                                          ),
                                          
+                                         
                                          # Show a plot of the generated distribution
                                          mainPanel(
                                            textOutput("prediccion")
@@ -69,16 +84,19 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                                   dashboardSidebar(),
                                                   dashboardBody()
                                     )
-                                    
-                                    
-                                    
+
                            )
                            
                 ))
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  # Modelo Salud
+  output$prediccionSalud <- renderText({
+    entrada <- data.frame()
+  })
   
+  # Modelo General
   output$prediccion <- renderText({
     entrada <- data.frame(X1=input$nvSalud,
                           X2=input$nvSeguridad,
@@ -93,3 +111,4 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
+
