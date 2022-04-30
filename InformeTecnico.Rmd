@@ -408,11 +408,11 @@ train_trabajo <- df_trabajo[datos_trabajo == 1,]
 test_trabajo <- df_trabajo[datos_trabajo == 2,]
 
 # Train
-lm1 <- lm(formula = SATISFACCION ~ . , data=train_trabajo)
-summary(lm1)
-
-test_trabajo$Y_Predict <- predict(lm1, newdata=test_trabajo)
-head(test_trabajo[ , c('SATISFACCION', 'Y_Predict')])
+# lm1 <- lm(formula = SATISFACCION ~ . , data=train_trabajo)
+# summary(lm1)
+# 
+# test_trabajo$Y_Predict <- predict(lm1, newdata=test_trabajo)
+# head(test_trabajo[ , c('SATISFACCION', 'Y_Predict')])
 ```
 ## Modelos Predictivos en Niños
 ```{r}
