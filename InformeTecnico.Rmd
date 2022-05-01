@@ -286,13 +286,15 @@ test_salud <- df_salud[datos_salud == 2,]
 # Train
 head(train_salud)
 lm_salud <- lm(formula = SATISFACCION ~ . , data=train_salud)
-summary(lm1)
+summary(lm_salud)
 
 test_salud$Y_Predict <- predict(lm_salud, newdata=test_salud)
 head(test_salud[ , c('SATISFACCION', 'Y_Predict')])
 
 save(file="App/data/modeloSatisfaccionSalud.RData",
                               list=c("lm_salud"))
+
+str(train_salud)
 ```
 
 ### Satisfacción sobre el Nivel de Seguridad
