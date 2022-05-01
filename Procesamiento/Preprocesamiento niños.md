@@ -66,19 +66,19 @@ Las variables de 'EDUCACION_MADRE' y 'EDUCACION_PADRE' las resumiremos como sigu
 4. Universidad
 
 ```py
-df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(2.0, 1.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(3.0, 2.0).replace(4, 2.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(5.0, 3.0).replace(6, 3.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(7.0, 4.0).replace(8, 4.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(9.0, 0.0).replace(10.0, 0.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(np.nan, -1.0), overwrite = True)
+df_car_hogar.EDUCACION_PADRE.replace(2.0, 1.0, overwrite = True)
+df_car_hogar.EDUCACION_PADRE.replace(3.0, 2.0, overwrite = True).replace(4, 2.0, overwrite = True)
+df_car_hogar.EDUCACION_PADRE.replace(5.0, 3.0, overwrite = True).replace(6, 3.0, overwrite = True)
+df_car_hogar.EDUCACION_PADRE.replace(7.0, 4.0, overwrite = True).replace(8, 4.0, overwrite = True)
+df_car_hogar.EDUCACION_PADRE.replace(9.0, 0.0, overwrite = True)
+df_car_hogar.EDUCACION_PADRE.replace(np.nan, -1.0, overwrite = True).replace(10.0, -1, overwrite = True)
 
-df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(2.0, 1.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(3.0, 2.0).replace(4, 2.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(5.0, 3.0).replace(6, 3.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(7.0, 4.0).replace(8, 4.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(9.0, 0.0).replace(10.0, 0.0), overwrite = True)
-df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(np.nan, -1.0), overwrite = True)
+df_car_hogar.EDUCACION_MADRE.replace(2.0, 1.0, overwrite = True)
+df_car_hogar.EDUCACION_MADRE.replace(3.0, 2.0, overwrite = True).replace(4, 2.0, overwrite = True)
+df_car_hogar.EDUCACION_MADRE.replace(5.0, 3.0, overwrite = True).replace(6, 3.0, overwrite = True)
+df_car_hogar.EDUCACION_MADRE.replace(7.0, 4.0, overwrite = True).replace(8, 4.0, overwrite = True)
+df_car_hogar.EDUCACION_MADRE.replace(9.0, 0.0, overwrite = True)
+df_car_hogar.EDUCACION_MADRE.replace(np.nan, -1.0, overwrite = True).replace(10.0, -1, overwrite = True)
 ```
 Generamos la variable de 'EDUCACION_PADRES' como el máximo entre 'EDUCACION_MADRE' y 'EDUCACION_PADRE'
 ```py

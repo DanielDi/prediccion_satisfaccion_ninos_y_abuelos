@@ -436,10 +436,9 @@ Los datos para niños:
 ```{r}
 #KNN Minutos para escuela, ValorBeca, PERCAPITA
 
-df_ninos <- ninos %>% select(EDAD, CANT_PERSONAS_HOGAR, INCAP, SATISFACCION, 
-                             PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, 
+df_ninos <- ninos %>% select(INCAP, SATISFACCION, PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, 
                              UBICACION_ESCUELA, EDUCACION_PADRES,
-                             CONDIC_VIDA_HOGAR)
+                             CONDIC_VIDA_HOGAR, TIEMPO_TRANSPORTE_ESC, HORAS_TRABAJO)
 
 df_ninos['ETNIA'] = as.factor(ninos[,'ETNIA'])
 
@@ -496,8 +495,8 @@ modelo <- ctree(formula = SATISFACCION ~ ., data=train, controls = ctree_control
 #test_pred <- cbind(test_pred, t)
 ```
 ```{r}
-png(file = "decision_tree.png", width = 3000, height = 1500, )
-plot(modelo)
+png(file = "decision_tree.png", width = 6000, height = 3000, )
+#plot(modelo)
 dev.off()
 modelo
 
@@ -522,6 +521,19 @@ train_pred <- cbind(train_pred, train['SATISFACCION'])
 cat_train_pred = lapply(train_pred/5.6, as.integer)
 table(cat_train_pred)
 ```
+### Calificación por "Feature Selection"
+En lo consiguiente calculamos unas métricas para mejorar el arbol:
+Sacamos paso a paso una del los variables y miramos que impacto tiene cada.
+
+**Resultados:**
+* CANT_PERSONAS_HOGAR y EDAD tienen un impacto negativo en los datos de la prueba y positivo en entrenamiento.
+  ** Significa que estos variables pruducen "overfitting".
+* PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, UBICACION_ESCUELA, EDUCACION_PADRES, CONDIC_VIDA_HOGAR, ETNIA, ESCUELA_OFICIAL, TRANSPORTE_ESCUELA, EDUCACION_PADRES, ACTIVIDAD_ULT_SEMANA, ENFERMEDAD_CRONICA tienen un impacto estrictamente positivo.
+* INCAP, LUGAR_TRABAJO, TIEMPO_TRANSPORTE_ESC tienen a veses un impacto positivo y en otros casos producen overfitting
+ ** Decidimos usar estos variables porque el impacto positivo es más grande que el negativo. 
+* HORAS_TRABAJO y VALOR_BECA no van a usar, sin embargo, tienen una impacto positivo.
+ ** Sacamos VALOR_BECA porque la correlación que hemos visto antes depende mucho de un valor atípico.
+
 Calcula MSE
 ```{r}
 print('MSE:' )
