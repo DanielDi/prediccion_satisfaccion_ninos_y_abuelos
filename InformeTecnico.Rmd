@@ -33,6 +33,7 @@ knitr::include_graphics("Imagenes/LOGO.png")
 \end{titlepage}
 
 ```{r setup, include=FALSE, echo=FALSE}
+library(caret)
 library(party)
 library(ggplot2)
 library(dplyr)
@@ -529,7 +530,7 @@ train_pred <- cbind(train_pred, train['SATISFACCION'])
 cat_train_pred = lapply(train_pred/5.6, as.integer)
 table(cat_train_pred)
 ```
-calculate MSE
+Calcula MSE
 ```{r}
 print('MSE:' )
 print(mean((train_pred$SATISFACCION - train_pred$pred_Satisfaccion)^2))
@@ -547,6 +548,62 @@ print(mean(cat_train_pred$SATISFACCION)^2)
 
 print('MSE test:' )
 print(mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2))
+```
+
+
+Calcula MAE
+```{r}
+print(mean(abs(train_pred$SATISFACCION - train_pred$pred_Satisfaccion)))
+print('mean:' )
+print(mean(train_pred$SATISFACCION))
+
+print('MAE test:' )
+print(mean(abs(test_pred$SATISFACCION - test_pred$pred_Satisfaccion)))
+
+
+print('Para las 10 categorias: MAE:' )
+print(mean(abs(cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)))
+print('mean:' )
+print(mean(cat_train_pred$SATISFACCION))
+
+print('MSE test:' )
+print(mean(abs(cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)))
+```
+Calcula RMSE
+```{r}
+
+print('Para las 10 categorias: RMSE:' )
+print(sqrt(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2)))
+
+print('RMSE test:' )
+print(sqrt(mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2)))
+```
+Calcula Confusion Matrix de los datos "train"
+```{r}
+# to factor
+cat_train_pred$SATISFACCION = factor(cat_train_pred$SATISFACCION)
+cat_train_pred$pred_Satisfaccion = factor(cat_train_pred$pred_Satisfaccion)
+
+#reorder
+cat_train_pred$pred_Satisfaccion = factor(cat_train_pred$pred_Satisfaccion, levels=c(0,1,2,3,4,5,6,7,8,9))
+
+#create confusion matrix
+confusionMatrix(table(cat_train_pred))
+
+```
+Calcula Confusion Matrix de los datos "test"
+```{r}
+# to factor
+cat_test_pred$SATISFACCION = factor(cat_test_pred$SATISFACCION)
+cat_test_pred$pred_Satisfaccion = factor(cat_test_pred$pred_Satisfaccion)
+
+#reorder
+cat_test_pred$SATISFACCION = factor(cat_test_pred$SATISFACCION, levels=c(0,1,2,3,4,5,6,7,8,9))
+cat_test_pred$pred_Satisfaccion = factor(cat_test_pred$pred_Satisfaccion, levels=c(0,1,2,3,4,5,6,7,8,9))
+
+#create confusion matrix
+confusionMatrix(table(cat_test_pred))
+levels(cat_test_pred$SATISFACCION)
 ```
 
 
