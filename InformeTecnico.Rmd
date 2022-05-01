@@ -122,31 +122,18 @@ comp_hogar <- read.csv2("Datos/caracteristicas_composicion_del_hogar.csv", heade
 El primer paso para verificar si las variables anteriores servirán para ajustar algún modelo es hacer un análisis descriptivo de cada una agrupando los niños y abuelos.
 
 # Modelos Predictivos
-Inicialmente, se intentó englobar en un modelo a los abuelos y niños con el fin de predecir la satisfacción. Sin embargo, como lo ilustra la tabla 1, las variables objetivos que se seleccionaron no fueron respondidas, en su mayoría, por niños. Este comportamiento se asemeja con los resultados encontrados en \cite{b7}, donde se puede observar que los abuelos y niños tienen diferentes definiciones de satisfacción y, por ende, diferentes factores que la influyen. Por esta razón, se decidió trabajar de forma independiente los modelos para los niños y abuelos.
+Inicialmente, se intentó englobar en un modelo a los abuelos y niños con el fin de predecir la satisfacción. Sin embargo, como lo ilustra la figura 1, las variables objetivos que se seleccionaron no fueron respondidas, en su mayoría, por niños. Este comportamiento se asemeja con los resultados encontrados en \cite{b7}, donde se puede observar que los abuelos y niños tienen diferentes definiciones de satisfacción y, por ende, diferentes factores que la influyen. Por esta razón, se decidió trabajar de forma independiente los modelos para los niños y abuelos. 
 
+![Niños no responden las preguntas más significativas]("Imagenes/justificacion_abuelos.png")
 
 ## Modelos Predictivos en Abuelos
 ```{r, echo = FALSE}
 library(caret)
-df_abuelos <- subset(personas, personas$Clasificación != "niño")
+df_abuelos <- subset(personas, personas$Clasificación == "3ra_edad")
 ```
 ### Satisfacción de la Vida en General
 
 #### Análisis Descriptivo
-
-##### Conteo de respuestas
-
-```{r,echo=F}
-countedAnswers <- aggregate(. ~ Clasificación, personas, FUN = function(x) sum(!is.na(x)), na.action = NULL)
-kable(countedAnswers[,1:8]) %>% 
-  kable_styling(position = "center")%>%
-  kable_styling(latex_options = "HOLD_position") %>% 
-  kable_styling(latex_options="scale_down")
-kable(countedAnswers[,9:15]) %>% 
-  kable_styling(position = "center")%>%
-  kable_styling(latex_options = "HOLD_position") %>% 
-  kable_styling(latex_options="scale_down")
-```
 
 Según la tabla anterior las variables que preguntan directamente por la satisfacción no son respondidas por los niños, por lo tanto se decide abordar y desarrollar modelos por separado para niños y abuelos.
 
