@@ -535,8 +535,8 @@ save(file="App/data/modeloSatisfaccionNiños.RData",
 ```
 
 ```{r}
-png(file = "decision_tree.png", width = 6000, height = 3000, )
-#plot(ctreeNiños)
+png(file = "App/www/decision_tree_niños.png", width = 6000, height = 3000, )
+plot(ctreeNiños)
 dev.off()
 ctreeNiños
 ```
