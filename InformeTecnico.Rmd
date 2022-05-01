@@ -407,8 +407,8 @@ corr_ninos <- ninos %>% select(SATISFACCION, ESTADO_SALUD, ACTIVIDADES, ETNIA,
                                PERCAPITA, CANT_PERSONAS_HOGAR, ESCUELA_OFICIAL,
                                VALOR_BECA, ORIGEN_SUBSIDIO_EDUC, UBICACION_ESCUELA, 
                                TRANSPORTE_ESCUELA, TIEMPO_TRANSPORTE_ESC, 
-                               ACTIVIDAD_ULT_SEMANA, LUGAR_TRABAJO, 
-                               ENFERMEDAD_CRONICA, INCAP)
+                               EDUCACION_PADRES ,ACTIVIDAD_ULT_SEMANA, 
+                               LUGAR_TRABAJO, ENFERMEDAD_CRONICA, INCAP)
 
 M = cor(corr_ninos, use = "pairwise.complete.obs")
 
@@ -424,7 +424,9 @@ Los datos para niños:
 #KNN Minutos para escuela, ValorBeca, PERCAPITA
 
 df_ninos <- ninos %>% select(EDAD, CANT_PERSONAS_HOGAR, INCAP, SATISFACCION, 
-                             PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, UBICACION_ESCUELA, CONDIC_VIDA_HOGAR)
+                             PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, 
+                             UBICACION_ESCUELA, EDUCACION_PADRES,
+                             CONDIC_VIDA_HOGAR)
 
 df_ninos['ETNIA'] = as.factor(ninos[,'ETNIA'])
 
