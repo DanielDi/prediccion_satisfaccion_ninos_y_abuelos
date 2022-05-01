@@ -377,11 +377,14 @@ train_seguridad <- df_seguridad[datos_seguridad == 1,]
 test_seguridad <- df_seguridad[datos_seguridad == 2,]
 
 # Train
-lm1 <- lm(formula = SATISFACCION ~ . , data=train_seguridad)
-summary(lm1)
+lm_seguridad <- lm(formula = SATISFACCION ~ . , data=train_seguridad)
+summary(lm_seguridad)
 
-test_seguridad$Y_Predict <- predict(lm1, newdata=test_seguridad)
+test_seguridad$Y_Predict <- predict(lm_seguridad, newdata=test_seguridad)
 head(test_seguridad[ , c('SATISFACCION', 'Y_Predict')])
+
+save(file="App/data/modeloSatisfaccionSeguridad.RData",
+                              list=c("lm_seguridad"))
 ```
 
 ### Satisfacción en el Trabajo
@@ -529,7 +532,7 @@ ctreeNiños
 ```
 
 ```{r}
-test_pred <- predict(modelo, newdata = test)
+test_pred <- predict(ctreeNiños, newdata = test)
 colnames(test_pred) <- c('pred_Satisfaccion')
 test_pred <- cbind(test_pred, test['SATISFACCION'])
 
@@ -538,7 +541,7 @@ table(cat_test_pred)
 ```
 
 ```{r}
-train_pred <- predict(modelo, newdata = train)
+train_pred <- predict(ctreeNiños, newdata = train)
 colnames(train_pred) <- c('pred_Satisfaccion')
 train_pred <- cbind(train_pred, train['SATISFACCION'])
 
