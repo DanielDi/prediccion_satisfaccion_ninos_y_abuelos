@@ -527,15 +527,18 @@ test <- df_ninos[datos1 == 2,]
 
 * Modelo de árbol de decisión
 ```{r}
-modelo <- ctree(formula = SATISFACCION ~ ., data=train, 
+ctreeNiños <- ctree(formula = SATISFACCION ~ ., data=train, 
                 controls = ctree_control(mincriterion = 0.7))
+
+save(file="App/data/modeloSatisfaccionNiños.RData",
+                              list=c("ctreeNiños"))
 ```
 
 ```{r}
 png(file = "decision_tree.png", width = 6000, height = 3000, )
-#plot(modelo)
+#plot(ctreeNiños)
 dev.off()
-modelo
+ctreeNiños
 ```
 
 ```{r}
