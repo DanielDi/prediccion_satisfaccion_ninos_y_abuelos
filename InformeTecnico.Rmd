@@ -473,7 +473,7 @@ ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6,
 
 Los datos para niños:
 ```{r}
-df_ninos <- ninos %>% select(EDAD, CANT_PERSONAS_HOGAR, INCAP, SATISFACCION, 
+df_ninos <- ninos %>% select(INCAP, SATISFACCION, 
                              PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, 
                              UBICACION_ESCUELA, EDUCACION_PADRES,
                              CONDIC_VIDA_HOGAR, TIEMPO_TRANSPORTE_ESC, HORAS_TRABAJO)
