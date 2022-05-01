@@ -29,12 +29,7 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                        # Sidebar with a slider input for number of bins 
                                        sidebarLayout(
                                          sidebarPanel(
-                                           selectInput("pagoEps", "Quien paga la afiliacion", label="¿Quién paga la afiliación?",
-                                                       choices = list("Paga una parte y la otra la empresa"=1,
-                                                                      "Le descuentan la pension"=2,
-                                                                      "Paga la totalidad de la afiliacion"=3,
-                                                                      "Paga completamente la empresa"=4,
-                                                                      "No paga, es beneficiario "=5)),
+                                           h3("Satisfacción estimada de la salud: "),
                                            selectInput("calidadEps", label="¿Cómo considera la calidad del prestador de salud?",
                                                        choices = list("Muy buena"=1,
                                                                       "Buena"=2,
@@ -57,7 +52,17 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                                                       "6. Alto"=6,
                                                                       "8. Planta eléctrica"=8,
                                                                       "0. No cuenta con servicios"=0)),
-
+                                           selectInput("regimen", 
+                                                       label="Régimen de seguridad social ",
+                                                       choices = list("1. Contributivo (eps)"=1,
+                                                                      "2. Especial (Fuerzas armadas, ecopetrol, universidades públicas, magisterio"=2,
+                                                                      "3. Subsidiado"=3)),
+                                           selectInput("enfermedadCronica", 
+                                                       label="¿Le han diagnosticado alguna enfermedad crónica?",
+                                                       choices = list("Si"=1,
+                                                                      "No"=2)),
+                                           h4("Satisfacción estimada de la salud: "),
+                                           h4(textOutput("prediccionSalud"))
                                            # sliderInput("condHogar",
                                            #             "Condiciones del Hogar",
                                            #             min = 1,
@@ -73,8 +78,8 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                          
                                          # Show a plot of the generated distribution
                                          mainPanel(
-                                           p("Satisfacción estimada de la salud: "),
-                                           textOutput("prediccionSalud")
+                                           # p("Satisfacción estimada de la salud: "),
+                                           # textOutput("prediccionSalud")
                                            # plotOutput("distPlot")
                                          )
                                        )
@@ -95,10 +100,11 @@ ui <- fluidPage(theme=shinytheme("superhero"),
 server <- function(input, output) {
   # Modelo Salud
   output$prediccionSalud <- renderText({
-    entrada <- data.frame(PAGO_EPS=as.integer(input$pagoEps),
-                          CALIDAD_EPS=as.numeric(input$calidadEps),
+    entrada <- data.frame(CALIDAD_EPS=as.integer(input$calidadEps),
                           ESTADO_SALUD=as.integer(input$estadoSalud),
-                          ESTRATO=as.integer(input$estrato))
+                          ESTRATO=as.integer(input$estrato),
+                          REGIMEN=as.numeric(input$regimen),
+                          ENFERMEDAD_CRONICA=as.integer(input$enfermedadCronica))
     salida <- predict(lm_salud, newdata = entrada)
     
   })
