@@ -275,13 +275,13 @@ df.update(df['TRABAJA'].replace(1.0, np.nan).replace(0.0,'0').rename('LUGAR_TRAB
 ```
 
 
-# Reemplazar ',' por '.' para la correcta lectura de los datos en la variable 'PERCAPITA'
+Reemplazar ',' por '.' para la correcta lectura de los datos en la variable 'PERCAPITA'
 ```python
 df['PERCAPITA'] = df['PERCAPITA'].astype(str).apply(lambda x: x.replace(',','.'))
 ```
 
 
-# Cambiar el tipo de dato de algunas variables
+Cambiar el tipo de dato de algunas variables
 ```python
 df = df.astype({'ESTUDIA':float, 'ESTADO_SALUD':float, 'ETNIA':float, 
                 'PERCAPITA':float, 'INCRESOS_AUTOPERCIBIDOS_HOGAR':float, 
@@ -298,14 +298,14 @@ Decimos que el óptimo es participar en todas las actividades y tener un estado 
 Asímismo decimos que el peor de los casos es que el niño no practique ninguna actividad y su estado se salud sea 4 ("malo").
 
 Primero poderamos la variable "Actividades". (Para calcular usamos la fórmula de Gauß.) Así, la diverencia entre realizar 6 o 7 actividades no es tan grande como la diferencia entre realizar 1 o ninguna actividad.
-* $0 \to 0$
-* $1 \to +7$
-* $2 \to +6$
-* $3 \to +5$
-* $4 \to +4$
-* $5 \to +3$
-* $6 \to +2$
-* $7 \to +1$
+* 0 → 0
+* 1 → +7
+* 2 → +6
+* 3 → +5
+* 4 → +4
+* 5 → +3
+* 6 → +2
+* 7 → +1
 
 
 ```python
@@ -355,19 +355,6 @@ df_corr
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
