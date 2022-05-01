@@ -3,9 +3,9 @@ title: ''
 author: ''
 date: ''
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 lang: es
 ---
 \begin{titlepage}
@@ -45,6 +45,7 @@ library(reshape2)
 require(kableExtra)
 require(ggcorrplot)
 require(magrittr)
+library(naniar)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -52,6 +53,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 La satisfacción de la vida y la felicidad varía entre países \cite{b7} y juegan un papel importante en el desarrollo de un país. Sin embargo, no se logró determinar documentación o estudios relacionados sobre cómo se pueden predecir estos factores en Colombia dados unos parámetros. Por tal motivo, se propone el plantemiento, desarrollo, análisis y posterior productización de un modelo con el cual se busca predecir la satisfacción de niños y abuelos. Para lograr esto, se toma como base una encuesta realizada por el DANE en el 2020: Colombia - Encuesta Nacional de Calidad de Vida - ECV 2020. Esta investigación, según el DANE "Busca cuantificar y caracterizar las condiciones socioeconómicas de los hogares colombianos, con el fin de obtener la información necesaria para la actualización de indicadores sociales a nivel de viviendas, hogares y personas, y para la definición de políticas que permitan diseñar y ejecutar planes sociales." (Metodologia ECV, 2009, p.17)   
 La estructura del estudio se planteó de la siguiente manera: se hizo una búsqueda exhaustiva sobre documentación para determinar cuáles de las variables que se tienen afectan de manera significativa la satisfacción. Después se planteó un modelo general, sin embargo al revisar las correlaciones entre las variables predictoras se dicidió partir ese modelo general en tres sub-modelos: satisfacción de salud, seguridad y trabajo. Para cada cada uno de estos también se realizó la búsqueda de documentación al respecto. Adicionalmente, se creó una página web para poder interactuar con los modelos. Finalmente, se obtuvieron los resultados y plantearon las conclusiones. 
+
+# Planteamiento del Problema 
+
+El Instituto Colombiano de Bienestar Familiar es una entidad que trabaja por la prevención y protección integral de la primera infancia, la niñez, la adolescencia y el bienestar general de las familias en Colombia, llegando a millones de colombianos mediante sus programas, estrategias y servicios de atención.  En el marco de los objetivos de esta institución se encontró que el ICBF actualmente no cuenta con una herramienta para conocer en prospectiva, y de forma adecuada y efectiva la satisfacción general de vida tanto de niños como de adultos en la tercera edad. Es para ellos de vital importancia conocer esta información pues es un indicador fundamental a tener en cuenta a la hora de crear programas preventivos y de protección que tienen como objetivo el mejoramiento de vida de la población destinataria. Por esto se busca implementar en el ICBF tanto los 3 sub-modelos como el modelo de satisfacción general, para que sea usado por la institución en pro de mejorar futuros planeamientos en todo proyecto social que involucre niños y adultos de la tercera edad como población objetivo.    
+
+
+
 
 # Justificación 
 ## Niños
@@ -77,11 +85,11 @@ Menor a 60 años & 1049 \\ \hline
 
 Se observa que con la definicion inicial estabamos omitiendo un total de 1049 observaciones, ademas, se observa que los abuelos resgitrados en la base de datos son relativamente pocos pues solo representan el x% del total de personas.
 
-Ante esta situacion tomamos la desicion de ...
+Ante esta situación tomamos la desicion de ...
 
 # Seleccion de Variables
 
-Para predecir la satisfaccion se tomaron en cuenta las evidencias halladas en la bibliografia, donde se encontro que las variables relacionadas con el nivel de satisfaccion de una persona son las siguientes:
+Para predecir la satisfacción se tomaron en cuenta las evidencias halladas en la bibliografía, donde se encontró que las variables relacionadas con el nivel de satisfacción de una persona son las siguientes:
 
 * NIVEL_DE_EDUCACION
 * SEXO
@@ -213,6 +221,18 @@ summary(lm1)
 
 test$Y_Predict <- predict(lm1, newdata=test)
 head(test[ , c('Y', 'Y_Predict')])
+entrada <- data.frame(X1=3,
+                      X2=3,
+                      X3=3,
+                      X4=3,
+                      X5=3)
+salida <- predict(lm1,newdata = entrada)
+print(salida)
+# Conexión con la aplicación
+#SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, 
+#                                     NIVEL_DE_EDUCACION, COND_VIDA_DEL_HOGAR, TRABAJO_AUTOPERCIBIDO
+save(file="App/data/modeloSatisfaccion.RData",
+                              list=c("lm1"))
 ```
 
 ### Satisfacción en la Salud
@@ -250,7 +270,6 @@ ggcorrplot(M, hc.order = TRUE, type = "lower",
    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
 
-
 #### Regresion con lm
 ```{r, echo=FALSE}
 set.seed(27042022) # se fija por reproducibilidad
@@ -266,11 +285,16 @@ test_salud <- df_salud[datos_salud == 2,]
 
 # Train
 head(train_salud)
-lm1 <- lm(formula = SATISFACCION ~ . , data=train_salud)
-summary(lm1)
+lm_salud <- lm(formula = SATISFACCION ~ . , data=train_salud)
+summary(lm_salud)
 
-test_salud$Y_Predict <- predict(lm1, newdata=test_salud)
+test_salud$Y_Predict <- predict(lm_salud, newdata=test_salud)
 head(test_salud[ , c('SATISFACCION', 'Y_Predict')])
+
+save(file="App/data/modeloSatisfaccionSalud.RData",
+                              list=c("lm_salud"))
+
+str(train_salud)
 ```
 
 ### Satisfacción sobre el Nivel de Seguridad
@@ -342,59 +366,47 @@ Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibl
 * TIPO_CONTRATO (P6460)
 * SALARIO (P8624)
 * HORAS_LABORALES (P415)
-* CONTRIBUYENTE (P6115)
-* CONDICIONES_DE_VIDA_HOGAR (P9030)
+* RECIBIO_PRIMAS (P8631)
+* RECIBIO_PENSIONES (P8642)
 
 #### Análisis Descriptivo
+
 ```{r, echo = FALSE}
 # Une las tablas
 df_trabajo <- merge(x = comp_hogar, y = fuerza_trabajo, by = "ID_Persona")
 df_trabajo <- merge(x = df_trabajo, y = salud, by = "ID_Persona")
 df_trabajo <- merge(x = df_trabajo, y = cond_hogar, by = "ID_Hogar")
 
-
 # Selecciona solo las personas de 3era edad
 df_trabajo <- subset(df_trabajo, df_trabajo$Clasificación == "3ra_edad")
 
 # Selecciona las variables de interés
 df_trabajo <- subset(df_trabajo, select = c("P1899", "P6020", "P6435", "P6440", 
-                                        "P6460", "P415", "P6115", "P9030", "P8624"))
-head(df_trabajo)
-#df_trabajo <- na.omit(df_trabajo)
-
+                                        "P6460", "P8624", "P415", "P8631", "P8642"))
 # Cambia los nombres de las columnas
 names(df_trabajo) = c("SATISFACCION", "SEXO", "CARGO", "TIENE_CONTRATO", "TIPO_CONTRATO",
-                      "SALARIO", "HORAS_LABORALES", "CONTRIBUYENTE", "CONDICIONES_DE_VIDA_HOGAR")
-head(df_trabajo)
+                      "SALARIO", "HORAS_LABORALES", "RECIBIO_PRIMAS", "RECIBIO_PENSIONES")
 ```
 
-##### Matriz de Correlaciones
-```{r, echo = FALSE}
-M <- cor(df_trabajo, use="pairwise.complete.obs")
-M[is.na(M)]=0
-ggcorrplot(M, hc.order = TRUE, type = "lower",
-   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
-```
-#### Regresion con lm
+#### Datos Faltantes
+
+Para este dataframe se tiene la siguiente cantidad de abuelos:
 ```{r, echo=FALSE}
-set.seed(27042022) # se fija por reproducibilidad
-
-
-# Separación de los datos en entrenamiento y prueba
-datos_trabajo <- sample(2, nrow(df_trabajo),
-                   replace = T,
-                   prob = c(0.75, 0.25))
-
-train_trabajo <- df_trabajo[datos_trabajo == 1,]
-test_trabajo <- df_trabajo[datos_trabajo == 2,]
-
-# Train
-lm1 <- lm(formula = SATISFACCION ~ . , data=train_trabajo)
-summary(lm1)
-
-test_trabajo$Y_Predict <- predict(lm1, newdata=test_trabajo)
-head(test_trabajo[ , c('SATISFACCION', 'Y_Predict')])
+count(df_trabajo, name = "Cantidad de Abuelos")
 ```
+Sin embargo, si se observa la cantidad de abuelos que respondieron a las preguntas seleccionadas:
+```{r, echo=FALSE}
+gg_miss_upset(subset(df_trabajo, select = c(-RECIBIO_PRIMAS, -RECIBIO_PENSIONES)))
+```
+
+se puede determinar que la mayoría de estos no respondieron a las preguntas que se les hicieron sobre el trabajo. Este mismo procedimiento se repitió con variables diferentes, pero no se obtuvieron resultados distintos a los presentados. Por tal motivo, se decide no realizar un modelo de predicción para la satisfacción del trabajo en los abuelos. En primera instancia se pensó que este comportamiento se debía a que la mayoría de los abuelos estaban pensionados, pero si se observan los abuelos pensionados:
+
+```{r, echo=FALSE}
+ barplot(table(df_trabajo$RECIBIO_PENSIONES), main = "¿Recibe pensión?")
+```
+
+la gran mayoría de estos respondieron que no recibían algún tipo de pensión (2). Por tanto, se puede inferir que la mayoría de los abuelos no trabajan y tampoco reciben pensión, es decir, viven dependientes de sus familiares.
+
 ## Modelos Predictivos en Niños
 ```{r}
 # los datos:
@@ -473,22 +485,14 @@ datos1 <- sample(2, nrow(df_ninos),
 
 train <- df_ninos[datos1 == 1,]
 test <- df_ninos[datos1 == 2,]
-
+```
+```{r}
 # Modelo de arbol de decicion
-modelo <- ctree(formula = SATISFACCION ~ ., data=train, 
-                controls = ctree_control(mincriterion = 0.9))
-
-
-test_pred <- predict(modelo, newdata = test)
-colnames(test_pred) <- c('pred_Satisfaccion')
-test_pred <- cbind(test_pred, test['SATISFACCION'])
-
-#modelo2 <- ctree(formula = Satisfaccion ~ Hacer_Pricipal + Lugar_de_Trabajo + Medio_transporte +Edad , data=train, controls = ctree_control(mincriterion = 0.7))
+modelo <- ctree(formula = SATISFACCION ~ ., data=train, controls = ctree_control(mincriterion = 0.7))
 
 #t <- predict(modelo2, newdata = test)
 #colnames(t) <- c('pred_Satisfaccion_3')
 #test_pred <- cbind(test_pred, t)
-head(test_pred)
 ```
 ```{r}
 png(file = "decision_tree.png", width = 3000, height = 1500, )
@@ -498,6 +502,43 @@ modelo
 
 # used variables: P9090,P6223,P9030, PERCAPITA, P1930, ETNIA, P6167, incap, CANT_PERSONAS_HOGAR, P5673, P400,P4693
 # variables inútiles: P8610S1, P6238,   P420
+```
+
+```{r}
+test_pred <- predict(modelo, newdata = test)
+colnames(test_pred) <- c('pred_Satisfaccion')
+test_pred <- cbind(test_pred, test['SATISFACCION'])
+
+cat_test_pred = lapply(test_pred/5.6, as.integer)
+table(cat_test_pred)
+```
+
+```{r}
+train_pred <- predict(modelo, newdata = train)
+colnames(train_pred) <- c('pred_Satisfaccion')
+train_pred <- cbind(train_pred, train['SATISFACCION'])
+
+cat_train_pred = lapply(train_pred/5.6, as.integer)
+table(cat_train_pred)
+```
+calculate MSE
+```{r}
+print('MSE:' )
+print(mean((train_pred$SATISFACCION - train_pred$pred_Satisfaccion)^2))
+print('MS:' )
+print(mean(train_pred$SATISFACCION)^2)
+
+print('MSE test:' )
+print(mean((test_pred$SATISFACCION - test_pred$pred_Satisfaccion)^2))
+
+
+print('Para las 10 categorias: MSE:' )
+print(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2))
+print('MS:' )
+print(mean(cat_train_pred$SATISFACCION)^2)
+
+print('MSE test:' )
+print(mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2))
 ```
 
 

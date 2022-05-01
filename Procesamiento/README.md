@@ -1,13 +1,17 @@
 # Dependencias del proyecto
 
-Los datos estaban almacenados en una unidad compartidad de Drive por lo que los datos se importaron desde ahí. Si se desea correr, entonces cambie esta ubicación.
-
 ```py
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from networkx import *
+```
+
+Los datos estaban almacenados en una unidad compartidad de Drive por lo que los datos se importaron desde ahí. Si se desea correr, entonces cambie esta ubicación.
+```py
+ruta_datos = '/content/drive/Shareddrives/TAE/Entregas/1/Datos/Encuesta/'
+ruta_destino_datos = '/content/drive/Shareddrives/TAE/Entregas/1/Datos/Exportados/'
 ```
 
 ## Funciones helpers
@@ -30,7 +34,7 @@ Debido a que cada tabla contiene mucha información no relevante para el proyect
 ## Características y composición del hogar
 
 ```py
-df_car_hogar = pd.read_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Encuesta/Características y composición del hogar.csv', sep=';')
+df_car_hogar = pd.read_csv(ruta_datos + 'Características y composición del hogar.csv', sep=';')
 
 #Reemplazar espacios por null
 df_car_hogar = df_car_hogar.replace(' ',np.nan)
@@ -64,7 +68,7 @@ df_car_hogar['Clasificación'].value_counts()
 ## Educación
 
 ```py
-df_educacion = pd.read_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Encuesta/Educación.csv', sep=';')
+df_educacion = pd.read_csv(ruta_datos + 'Educación.csv', sep=';')
 
 df_educacion = df_educacion.replace(' ',np.nan) # Reemplazar espacios por null
 
@@ -108,7 +112,7 @@ df_educacion.drop(['P8587'], axis=1, inplace=True)
 
 ## Salud
 ```py
-df_salud = pd.read_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Encuesta/Salud.csv', sep=';')
+df_salud = pd.read_csv(ruta_datos + 'Salud.csv', sep=';')
 
 df_salud = df_salud.replace(' ',np.nan) # Reemplazar espacios por null
 
@@ -119,7 +123,7 @@ df_salud = df_salud[['ID_Persona', 'P6090', 'P8551', 'P6181', 'P6115']]
 
 ## Fuerza de trabajo
 ```py
-df_fuerza_trabajo = pd.read_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Encuesta/Fuerza de trabajo.csv', sep=';')
+df_fuerza_trabajo = pd.read_csv(ruta_datos + 'Fuerza de trabajo.csv', sep=';')
 
 df_fuerza_trabajo = df_fuerza_trabajo.replace(' ',np.nan)
 
@@ -131,7 +135,7 @@ df_fuerza_trabajo = df_fuerza_trabajo[['ID_Persona', 'P6435', 'P6440', 'P6460',
 
 ## Servicios del hogar
 ```py
-df_serv_hogar = pd.read_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Encuesta/Servicios del hogar.csv', sep=';')
+df_serv_hogar = pd.read_csv(ruta_datos + 'Servicios del hogar.csv', sep=';')
 
 df_serv_hogar = df_serv_hogar.replace(' ',np.nan)
 
@@ -143,7 +147,7 @@ df_serv_hogar = df_serv_hogar[['ID_Hogar', 'I_HOGAR', 'PERCAPITA']]
 ## Condiciones de vida del hogar y tendencia de bienes
 
 ```py
-df_cond_hogar = pd.read_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Encuesta/Condiciones de vida del hogar y tenencia de bienes.csv', sep=';')
+df_cond_hogar = pd.read_csv(ruta_datos + 'Condiciones de vida del hogar y tenencia de bienes.csv', sep=';')
 
 df_cond_hogar = df_cond_hogar.replace(' ',np.nan)
 
@@ -155,7 +159,7 @@ df_cond_hogar = df_cond_hogar[['ID_Hogar','P9030', 'P9010']]
 ## Datos de la vivienda
 
 ```py
-df_datos_vivienda = pd.read_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Encuesta/Datos de la vivienda.csv', sep=';')
+df_datos_vivienda = pd.read_csv(ruta_datos + 'Datos de la vivienda.csv', sep=';')
 
 df_datos_vivienda = df_datos_vivienda.replace(' ',np.nan)
 
@@ -239,34 +243,34 @@ El objetivo de este procesamiento es obtener los datos necesarios para la constr
 
 ```py
 # Dataframe general  
-df.to_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Exportados/personas.csv', 
+df.to_csv(ruta_destino_datos + 'personas.csv', 
           sep=';', index=False)
 
 # Dataframe salud
-df_salud.to_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Exportados/salud.csv', 
+df_salud.to_csv(ruta_destino_datos + 'salud.csv', 
           sep=';', index=False)
 
 # Dataframe educación
-df_educacion.to_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Exportados/educacion.csv', 
+df_educacion.to_csv(ruta_destino_datos + 'educacion.csv', 
           sep=';', index=False)
 
 # Dataframe de Características y Composición del hogar
-df_car_hogar.to_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Exportados/caracteristicas_composicion_del_hogar.csv', 
+df_car_hogar.to_csv(ruta_destino_datos + 'caracteristicas_composicion_del_hogar.csv', 
           sep=';', index=False)
 
 # Dataframe de fuerza de trabajo
-df_fuerza_trabajo.to_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Exportados/fuerza_trabajo.csv', 
+df_fuerza_trabajo.to_csv(ruta_destino_datos + 'fuerza_trabajo.csv', 
           sep=';', index=False)
 
 # Dataframe de servicios del hogar
-df_serv_hogar.to_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Exportados/servicios_hogar.csv', 
+df_serv_hogar.to_csv(ruta_destino_datos + 'servicios_hogar.csv', 
           sep=';', index=False)
 
 # Dataframe de condiciones de vida del hogar y tendencia de bienes.
-df_cond_hogar.to_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Exportados/condiciones_hogar.csv', 
+df_cond_hogar.to_csv(ruta_destino_datos + 'condiciones_hogar.csv', 
           sep=';', index=False)
 
 # Dataframe de datos vivienda
-df_datos_vivienda.to_csv('/content/drive/Shareddrives/TAE/Entregas/1/Datos/Exportados/datos_vivienda.csv', 
+df_datos_vivienda.to_csv(ruta_destino_datos + 'datos_vivienda.csv', 
           sep=';', index=False)
 ```
