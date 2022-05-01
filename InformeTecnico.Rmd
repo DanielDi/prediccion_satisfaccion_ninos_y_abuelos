@@ -3,9 +3,9 @@ title: ''
 author: ''
 date: ''
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 lang: es
 ---
 \begin{titlepage}
@@ -426,29 +426,62 @@ ninos <- read.csv2("Datos/datos_ninos.csv", header=TRUE, dec=".", encoding="UTF-
 ```
 ### Correlaciones
 ```{r}
-corr_ninos <- ninos %>% select(Satisfaccion, SALUD_AUTOPERCIBIDA, Actividades, P9030, P9090, P8610S1, P5673, P6238, P6223, PERCAPITA, ETNIA, CANT_PERSONAS_HOGAR, P400, P420, P4693, P6167 , P1930, incap)
+corr_ninos <- ninos %>% select(SATISFACCION, ESTADO_SALUD, ACTIVIDADES, ETNIA, 
+                               CONDIC_VIDA_HOGAR, INCRESOS_AUTOPERCIBIDOS_HOGAR,
+                               PERCAPITA, CANT_PERSONAS_HOGAR, ESCUELA_OFICIAL,
+                               VALOR_BECA, ORIGEN_SUBSIDIO_EDUC, UBICACION_ESCUELA, 
+                               TRANSPORTE_ESCUELA, TIEMPO_TRANSPORTE_ESC, 
+                               ACTIVIDAD_ULT_SEMANA, LUGAR_TRABAJO, 
+                               ENFERMEDAD_CRONICA, INCAP)
+
 M = cor(corr_ninos, use = "pairwise.complete.obs")
+
 M[is.na(M)]=0
- ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6, pch.col = "red",lab_size = 2)
+
+ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6, 
+            pch.col = "red", lab_size = 2)
 
 ```
 
 Los datos para niños:
 ```{r}
-#KNN P6167 - Minutos para escuela, ValorBeca, PERCAPITA
-df_ninos <- ninos %>% select(Edad, CANT_PERSONAS_HOGAR, incap, Satisfaccion, PERCAPITA)
+#KNN Minutos para escuela, ValorBeca, PERCAPITA
+
+df_ninos <- ninos %>% select(EDAD, INCAP, SATISFACCION, 
+                             PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, UBICACION_ESCUELA, CONDIC_VIDA_HOGAR)
+
 df_ninos['ETNIA'] = as.factor(ninos[,'ETNIA'])
-df_ninos['Vive_con_Padre'] = factor(ninos[,'P6081'], labels = c(TRUE, FALSE, 'Muerto'))
-df_ninos['Vive_con_Madre'] = factor(ninos[,'P6083'], labels = c(TRUE, FALSE, 'Muerto'))
-df_ninos['Escuela_Typo'] = factor(ninos[,'P5673'], labels = c('Oficial', 'conSubstito', 'SinSubstito'))
-df_ninos['Escuela_Lugar'] = ninos[,'P5673']
-df_ninos['Beca'] = ninos[,'P8610S1'] 
-df_ninos['Medio_transporte'] = addNA(factor(ninos[,'P4693'], labels = c('Carro', 'escolar', 'público','pie', 'Bicicleta', 'Caballo', 'canoa', 'Otro')))
-df_ninos['enfermedad_crónica'] =  addNA(factor(ninos[,'P1930'], labels = c(TRUE, FALSE)))
-df_ninos['Ingreso'] = ninos[,'P9090']
-df_ninos['Vida_Hogar'] = ninos[,'P9030']
-df_ninos['Hacer_Pricipal'] = addNA(factor(ninos[,'P400'], labels = c(	'Trabajando','Buscando','Estudiando', 'Oficios_hogar', 'Incapacitado trabajar','Otra')))
-df_ninos['Lugar_de_Trabajo'] = addNA(factor(ninos[,'P420'], labels = c('no trabajo','la vivienda', 'otra vivienda', 'Puerta', 'calle', 'oficina','campo', 'obra')))
+
+df_ninos['VIVE_CON_PADRE'] = factor(ninos[,'VIVE_CON_PADRE'], labels = c(TRUE, 
+                                                                         FALSE, 
+                                                                         'Muerto'))
+
+df_ninos['VIVE_CON_MADRE'] = factor(ninos[,'VIVE_CON_MADRE'], labels = c(TRUE, 
+                                                                         FALSE, 
+                                                                         'Muerto'))
+
+df_ninos['ESCUELA_OFICIAL'] = factor(ninos[,'ESCUELA_OFICIAL'], labels = c('Oficial', 
+                                                              'conSubstito', 
+                                                              'SinSubstito'))
+
+df_ninos['TRANSPORTE_ESCUELA'] = addNA(factor(ninos[,'TRANSPORTE_ESCUELA'], 
+                                        labels = c('Carro', 'escolar', 'público',
+                                                   'pie', 'Bicicleta', 'Caballo',
+                                                   'canoa', 'Otro')))
+
+df_ninos['ENFERMEDAD_CRONICA'] =  addNA(factor(ninos[,'ENFERMEDAD_CRONICA'], 
+                                               labels = c(TRUE, FALSE)))
+
+df_ninos['ACTIVIDAD_ULT_SEMANA'] = addNA(factor(ninos[,'ACTIVIDAD_ULT_SEMANA'], 
+                                          labels = c( 'Trabajando', 'Buscando',
+                                                      'Estudiando', 'Oficios_hogar', 
+                                                      'Incapacitado trabajar', 'Otra')))
+
+df_ninos['LUGAR_TRABAJO'] = addNA(factor(ninos[,'LUGAR_TRABAJO'], 
+                                         labels = c('no trabajo', 'la vivienda',
+                                                    'otra vivienda', 'Puerta', 
+                                                    'calle', 'oficina', 'campo',
+                                                    'obra')))
 
 head(df_ninos)
 ```
@@ -462,21 +495,14 @@ datos1 <- sample(2, nrow(df_ninos),
 
 train <- df_ninos[datos1 == 1,]
 test <- df_ninos[datos1 == 2,]
-
+```
+```{r}
 # Modelo de arbol de decicion
-modelo <- ctree(formula = Satisfaccion ~ ., data=train, controls = ctree_control(mincriterion = 0.89))
-
-
-test_pred <- predict(modelo, newdata = test)
-colnames(test_pred) <- c('pred_Satisfaccion')
-test_pred <- cbind(test_pred, test['Satisfaccion'])
-
-#modelo2 <- ctree(formula = Satisfaccion ~ Hacer_Pricipal + Lugar_de_Trabajo + Medio_transporte +Edad , data=train, controls = ctree_control(mincriterion = 0.7))
+modelo <- ctree(formula = SATISFACCION ~ ., data=train, controls = ctree_control(mincriterion = 0.7))
 
 #t <- predict(modelo2, newdata = test)
 #colnames(t) <- c('pred_Satisfaccion_3')
 #test_pred <- cbind(test_pred, t)
-head(test_pred)
 ```
 ```{r}
 png(file = "decision_tree.png", width = 3000, height = 1500, )
@@ -486,6 +512,43 @@ modelo
 
 # used variables: P9090,P6223,P9030, PERCAPITA, P1930, ETNIA, P6167, incap, CANT_PERSONAS_HOGAR, P5673, P400,P4693
 # variables inútiles: P8610S1, P6238,   P420
+```
+
+```{r}
+test_pred <- predict(modelo, newdata = test)
+colnames(test_pred) <- c('pred_Satisfaccion')
+test_pred <- cbind(test_pred, test['SATISFACCION'])
+
+cat_test_pred = lapply(test_pred/5.6, as.integer)
+table(cat_test_pred)
+```
+
+```{r}
+train_pred <- predict(modelo, newdata = train)
+colnames(train_pred) <- c('pred_Satisfaccion')
+train_pred <- cbind(train_pred, train['SATISFACCION'])
+
+cat_train_pred = lapply(train_pred/5.6, as.integer)
+table(cat_train_pred)
+```
+calculate MSE
+```{r}
+print('MSE:' )
+print(mean((train_pred$SATISFACCION - train_pred$pred_Satisfaccion)^2))
+print('MS:' )
+print(mean(train_pred$SATISFACCION)^2)
+
+print('MSE test:' )
+print(mean((test_pred$SATISFACCION - test_pred$pred_Satisfaccion)^2))
+
+
+print('Para las 10 categorias: MSE:' )
+print(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2))
+print('MS:' )
+print(mean(cat_train_pred$SATISFACCION)^2)
+
+print('MSE test:' )
+print(mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2))
 ```
 
 
