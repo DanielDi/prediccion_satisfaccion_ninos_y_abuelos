@@ -436,8 +436,6 @@ ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6,
 
 Los datos para niños:
 ```{r}
-#KNN Minutos para escuela, ValorBeca, PERCAPITA
-
 df_ninos <- ninos %>% select(EDAD, CANT_PERSONAS_HOGAR, INCAP, SATISFACCION, 
                              PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, 
                              UBICACION_ESCUELA, EDUCACION_PADRES,
@@ -478,10 +476,10 @@ df_ninos['LUGAR_TRABAJO'] = addNA(factor(ninos[,'LUGAR_TRABAJO'],
 
 head(df_ninos)
 ```
-## Resultados del entrenamiento
-```{r}
+### Resultados del entrenamiento
 
-# Separación de los datos en entrenamiento y prueba
+Separación de los datos en entrenamiento y prueba
+```{r}
 datos1 <- sample(2, nrow(df_ninos),
                    replace = TRUE,
                     prob = c(0.75, 0.25))
@@ -489,22 +487,19 @@ datos1 <- sample(2, nrow(df_ninos),
 train <- df_ninos[datos1 == 1,]
 test <- df_ninos[datos1 == 2,]
 ```
-```{r}
-# Modelo de arbol de decicion
-modelo <- ctree(formula = SATISFACCION ~ ., data=train, controls = ctree_control(mincriterion = 0.7))
 
-#t <- predict(modelo2, newdata = test)
-#colnames(t) <- c('pred_Satisfaccion_3')
-#test_pred <- cbind(test_pred, t)
+Modelo de árbol de decisión
+```{r}
+modelo <- ctree(formula = SATISFACCION ~ ., data=train, 
+                controls = ctree_control(mincriterion = 0.7))
 ```
+
 ```{r}
 png(file = "decision_tree.png", width = 3000, height = 1500, )
 plot(modelo)
+
 dev.off()
 modelo
-
-# used variables: P9090,P6223,P9030, PERCAPITA, P1930, ETNIA, P6167, incap, CANT_PERSONAS_HOGAR, P5673, P400,P4693
-# variables inútiles: P8610S1, P6238,   P420
 ```
 
 ```{r}
@@ -524,76 +519,82 @@ train_pred <- cbind(train_pred, train['SATISFACCION'])
 cat_train_pred = lapply(train_pred/5.6, as.integer)
 table(cat_train_pred)
 ```
-Calcula MSE
+
+#### Cálculo de métricas 
+
 ```{r}
-print('MSE:' )
-print(mean((train_pred$SATISFACCION - train_pred$pred_Satisfaccion)^2))
-print('MS:' )
-print(mean(train_pred$SATISFACCION)^2)
+MSE_train <- mean((train_pred$SATISFACCION - train_pred$pred_Satisfaccion)^2)
 
-print('MSE test:' )
-print(mean((test_pred$SATISFACCION - test_pred$pred_Satisfaccion)^2))
+MS_train <- mean(train_pred$SATISFACCION)^2
 
+MSE_cat_train <- mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2)
 
-print('Para las 10 categorias: MSE:' )
-print(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2))
-print('MS:' )
-print(mean(cat_train_pred$SATISFACCION)^2)
+MS_cat_train <- mean(cat_train_pred$SATISFACCION)^2
 
-print('MSE test:' )
-print(mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2))
+MAE_train <- mean(abs(train_pred$SATISFACCION - train_pred$pred_Satisfaccion))
+
+MAE_cat_train <- mean(abs(cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion))
+
+RMSE_cat_train <- sqrt(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2))
 ```
+Entrenamiento
+- MSE: {MSE_train}
+- MS: {MS_trains}
+- MAE: {MAE_train}
+Para las 10 categorías
+- MSE: {MSE_cat_train}
+- MS: {MS_cat_train}
+- MAE: {MAE_cat_train}
+- RMSE: {RMSE_cat_train}
 
 
-Calcula MAE
 ```{r}
-print(mean(abs(train_pred$SATISFACCION - train_pred$pred_Satisfaccion)))
-print('mean:' )
-print(mean(train_pred$SATISFACCION))
+MSE_test <- mean((test_pred$SATISFACCION - test_pred$pred_Satisfaccion)^2)
 
-print('MAE test:' )
-print(mean(abs(test_pred$SATISFACCION - test_pred$pred_Satisfaccion)))
+MSE_cat_test <- mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2)
 
+MAE_test <- mean(abs(test_pred$SATISFACCION - test_pred$pred_Satisfaccion))
 
-print('Para las 10 categorias: MAE:' )
-print(mean(abs(cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)))
-print('mean:' )
-print(mean(cat_train_pred$SATISFACCION))
+MAE_cat_test <- mean(abs(cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion))
 
-print('MSE test:' )
-print(mean(abs(cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)))
+RMSE_test <- sqrt(mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2))
 ```
-Calcula RMSE
-```{r}
+Prueba
+- MSE: {MSE_test}
+- MAE: {MAE_test}
+Para las 10 categorías
+- MSE: {MSE_cat_test}
+- MAE: {MAE_cat_test}
+- RMSE: {RMSE_test}
 
-print('Para las 10 categorias: RMSE:' )
-print(sqrt(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2)))
 
-print('RMSE test:' )
-print(sqrt(mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2)))
-```
-Calcula Confusion Matrix de los datos "train"
+#### Matriz de confusión de los datos
+Entrenamiento
 ```{r}
 # to factor
 cat_train_pred$SATISFACCION = factor(cat_train_pred$SATISFACCION)
 cat_train_pred$pred_Satisfaccion = factor(cat_train_pred$pred_Satisfaccion)
 
 #reorder
-cat_train_pred$pred_Satisfaccion = factor(cat_train_pred$pred_Satisfaccion, levels=c(0,1,2,3,4,5,6,7,8,9))
+cat_train_pred$pred_Satisfaccion = factor(cat_train_pred$pred_Satisfaccion, 
+                                          levels=c(0,1,2,3,4,5,6,7,8,9))
 
 #create confusion matrix
 confusionMatrix(table(cat_train_pred))
 
 ```
-Calcula Confusion Matrix de los datos "test"
+Prueba
 ```{r}
 # to factor
 cat_test_pred$SATISFACCION = factor(cat_test_pred$SATISFACCION)
 cat_test_pred$pred_Satisfaccion = factor(cat_test_pred$pred_Satisfaccion)
 
 #reorder
-cat_test_pred$SATISFACCION = factor(cat_test_pred$SATISFACCION, levels=c(0,1,2,3,4,5,6,7,8,9))
-cat_test_pred$pred_Satisfaccion = factor(cat_test_pred$pred_Satisfaccion, levels=c(0,1,2,3,4,5,6,7,8,9))
+cat_test_pred$SATISFACCION = factor(cat_test_pred$SATISFACCION, 
+                                    levels=c(0,1,2,3,4,5,6,7,8,9))
+
+cat_test_pred$pred_Satisfaccion = factor(cat_test_pred$pred_Satisfaccion, 
+                                         levels=c(0,1,2,3,4,5,6,7,8,9))
 
 #create confusion matrix
 confusionMatrix(table(cat_test_pred))
