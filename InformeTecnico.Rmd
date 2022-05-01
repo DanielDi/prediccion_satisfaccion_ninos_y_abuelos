@@ -478,7 +478,7 @@ head(df_ninos)
 ```
 ### Resultados del entrenamiento
 
-Separación de los datos en entrenamiento y prueba
+* Separación de los datos en entrenamiento y prueba
 ```{r}
 datos1 <- sample(2, nrow(df_ninos),
                    replace = TRUE,
@@ -488,7 +488,7 @@ train <- df_ninos[datos1 == 1,]
 test <- df_ninos[datos1 == 2,]
 ```
 
-Modelo de árbol de decisión
+* Modelo de árbol de decisión
 ```{r}
 modelo <- ctree(formula = SATISFACCION ~ ., data=train, 
                 controls = ctree_control(mincriterion = 0.7))
