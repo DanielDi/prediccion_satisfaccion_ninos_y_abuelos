@@ -47,6 +47,8 @@ require(kableExtra)
 require(ggcorrplot)
 require(magrittr)
 library(naniar)
+library(polycor)
+
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -262,7 +264,6 @@ df_salud <- subset(df_salud, select = c("P1897", "P6181", "P6127", "P8520S1A1", 
 
 # Cambia los nombres de las columnas
 names(df_salud) = c("SATISFACCION", "CALIDAD_EPS", "ESTADO_SALUD", "ESTRATO", "REGIMEN", "ENFERMEDAD_CRONICA")
-summary(df_salud$REGIMEN)
 ```
 
 ##### Matriz de Correlaciones
@@ -305,17 +306,20 @@ Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibl
 * ESTADO_CIVIL (P5502)
 * SEXO (P6020´)
 * ESTRATO (P8520S1A1)
-* INGRESOS (P8624) -> por fuera por muchos nans
-* HORAS_LABORALES (P415) -> fuera
 * NIVEL_DE_SEGURIDAD (P9010)
 * CONDICIONES_DE_VIDA_HOGAR (P9030)
 * ES_CAMPESINO (P2059)
-* ES_POBRE (P5230) -> fuera
+* CAI P1913S5
+* ROBO P9025S2
+* OTRO_DELITO P9025S1
+* LEE_ESCRIBE (P6160)
 
 #### Análisis Descriptivo
 ```{r, echo = FALSE}
 # Une las tablas
+
 df_seguridad <- merge(x = comp_hogar, y = fuerza_trabajo, by = "ID_Persona")
+df_seguridad <- merge(x = df_seguridad, y = educacion, by = "ID_Persona")
 df_seguridad <- merge(x = df_seguridad, y = cond_hogar, by = "ID_Hogar")
 df_seguridad <- merge(x = df_seguridad, y = datos_vivienda, by = "DIRECTORIO")
 
@@ -323,22 +327,55 @@ df_seguridad <- merge(x = df_seguridad, y = datos_vivienda, by = "DIRECTORIO")
 df_seguridad <- subset(df_seguridad, df_seguridad$Clasificación == "3ra_edad")
 
 # Selecciona las variables de interés
-df_seguridad <- subset(df_seguridad, select = c("P1898", "P5502", "P6020", "P8520S1A1", 
-                                                "P9010", "P9030", "P2059"))
+df_seguridad <- subset(df_seguridad, select = c("P1898", "P5502", "P6020", "P8520S1A1",
+                                                "P9010", "P9030", "P2059",
+                                                "P1913S5", "P9025S2", "P9025S1", "P6160"))
 
 # Cambia los nombres de las columnas
-names(df_seguridad) = c("SATISFACCION", "ESTADO_CIVIL", "SEXO", "ESTRATO", 
+names(df_seguridad) = c("SATISFACCION", "ESTADO_CIVIL", "SEXO", "ESTRATO",
                         "NIVEL_DE_SEGURIDAD", "CONDICIONES_DE_VIDA_HOGAR",
-                      "ES_CAMPESINO")
+                      "ES_CAMPESINO","CAI", "ROBO", "OTRO_DELITO", "LEE_ESCRIBE")
 
 ```
 
-##### Matriz de Correlaciones
+##### Matriz de Correlaciones Pearson
+
 ```{r, echo = FALSE}
 M <- cor(df_seguridad)
 ggcorrplot(M, hc.order = TRUE, type = "lower",
-   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
+    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
+
+##### Correlaciones Polychoric
+
+Para tener mayor certeza sobre la relación entre variables, se hace uso del método Polychoric y se obtuvieron los siguientes resultados:
+```{r, echo = FALSE}
+
+corr1 <- polychor(df_seguridad$SATISFACCION, df_seguridad$ESTADO_CIVIL)
+corr2 <- polychor(df_seguridad$SATISFACCION, df_seguridad$SEXO)
+corr3 <- polychor(df_seguridad$SATISFACCION, df_seguridad$ESTRATO)
+corr4 <- polychor(df_seguridad$SATISFACCION, df_seguridad$NIVEL_DE_SEGURIDAD)
+corr5 <- polychor(df_seguridad$SATISFACCION, df_seguridad$CONDICIONES_DE_VIDA_HOGAR)
+corr6 <- polychor(df_seguridad$SATISFACCION, df_seguridad$ES_CAMPESINO)
+corr7 <- polychor(df_seguridad$SATISFACCION, df_seguridad$CAI)
+corr8 <- polychor(df_seguridad$SATISFACCION, df_seguridad$ROBO)
+corr9 <- polychor(df_seguridad$SATISFACCION, df_seguridad$OTRO_DELITO)
+corr10 <- polychor(df_seguridad$SATISFACCION, df_seguridad$LEE_ESCRIBE)
+
+cor_poly <- data.frame(ESTADO_CIVIL = c(corr1), SEXO = c(corr2), 
+                       ESTRATO = c(corr3), NIVEL_DE_SEGURIDAD  = c(corr4), 
+                       CONDICIONES_DE_VIDA_HOGAR  = c(corr5), ES_CAMPESINO = c(corr6),
+                       CAI = c(corr7), ROBO = c(corr8), OTRO_DELITO = c(corr9),
+                       LEE_ESCRIBE = c(corr10))
+cor_poly
+```
+
+Por tal motivo, se decide eliminar las variables SEXO, ESTRATO, ES_CAMPESINO y CAI ya que no presentan un correlación significativa con la variable objetivo.
+
+```{r, echo = FALSE}
+df_seguridad = subset(df_seguridad, select = c(-SEXO, -ESTRATO, -ES_CAMPESINO, -CAI))
+```
+
 #### Regresion con lm
 ```{r, echo=FALSE}
 set.seed(27042022) # se fija por reproducibilidad
