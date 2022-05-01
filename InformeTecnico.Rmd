@@ -46,6 +46,7 @@ library(reshape2)
 require(kableExtra)
 require(ggcorrplot)
 require(magrittr)
+library(naniar)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -270,7 +271,6 @@ ggcorrplot(M, hc.order = TRUE, type = "lower",
    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
 
-
 #### Regresion con lm
 ```{r, echo=FALSE}
 set.seed(27042022) # se fija por reproducibilidad
@@ -287,13 +287,15 @@ test_salud <- df_salud[datos_salud == 2,]
 # Train
 head(train_salud)
 lm_salud <- lm(formula = SATISFACCION ~ . , data=train_salud)
-summary(lm1)
+summary(lm_salud)
 
 test_salud$Y_Predict <- predict(lm_salud, newdata=test_salud)
 head(test_salud[ , c('SATISFACCION', 'Y_Predict')])
 
 save(file="App/data/modeloSatisfaccionSalud.RData",
                               list=c("lm_salud"))
+
+str(train_salud)
 ```
 
 ### Satisfacción sobre el Nivel de Seguridad
@@ -365,59 +367,47 @@ Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibl
 * TIPO_CONTRATO (P6460)
 * SALARIO (P8624)
 * HORAS_LABORALES (P415)
-* CONTRIBUYENTE (P6115)
-* CONDICIONES_DE_VIDA_HOGAR (P9030)
+* RECIBIO_PRIMAS (P8631)
+* RECIBIO_PENSIONES (P8642)
 
 #### Análisis Descriptivo
+
 ```{r, echo = FALSE}
 # Une las tablas
 df_trabajo <- merge(x = comp_hogar, y = fuerza_trabajo, by = "ID_Persona")
 df_trabajo <- merge(x = df_trabajo, y = salud, by = "ID_Persona")
 df_trabajo <- merge(x = df_trabajo, y = cond_hogar, by = "ID_Hogar")
 
-
 # Selecciona solo las personas de 3era edad
 df_trabajo <- subset(df_trabajo, df_trabajo$Clasificación == "3ra_edad")
 
 # Selecciona las variables de interés
 df_trabajo <- subset(df_trabajo, select = c("P1899", "P6020", "P6435", "P6440", 
-                                        "P6460", "P415", "P6115", "P9030", "P8624"))
-head(df_trabajo)
-#df_trabajo <- na.omit(df_trabajo)
-
+                                        "P6460", "P8624", "P415", "P8631", "P8642"))
 # Cambia los nombres de las columnas
 names(df_trabajo) = c("SATISFACCION", "SEXO", "CARGO", "TIENE_CONTRATO", "TIPO_CONTRATO",
-                      "SALARIO", "HORAS_LABORALES", "CONTRIBUYENTE", "CONDICIONES_DE_VIDA_HOGAR")
-head(df_trabajo)
+                      "SALARIO", "HORAS_LABORALES", "RECIBIO_PRIMAS", "RECIBIO_PENSIONES")
 ```
 
-##### Matriz de Correlaciones
-```{r, echo = FALSE}
-M <- cor(df_trabajo, use="pairwise.complete.obs")
-M[is.na(M)]=0
-# ggcorrplot(M, hc.order = TRUE, type = "lower",
-#    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
-```
-#### Regresion con lm
+#### Datos Faltantes
+
+Para este dataframe se tiene la siguiente cantidad de abuelos:
 ```{r, echo=FALSE}
-set.seed(27042022) # se fija por reproducibilidad
-
-
-# Separación de los datos en entrenamiento y prueba
-datos_trabajo <- sample(2, nrow(df_trabajo),
-                   replace = T,
-                   prob = c(0.75, 0.25))
-
-train_trabajo <- df_trabajo[datos_trabajo == 1,]
-test_trabajo <- df_trabajo[datos_trabajo == 2,]
-
-# Train
-# lm1 <- lm(formula = SATISFACCION ~ . , data=train_trabajo)
-# summary(lm1)
-# 
-# test_trabajo$Y_Predict <- predict(lm1, newdata=test_trabajo)
-# head(test_trabajo[ , c('SATISFACCION', 'Y_Predict')])
+count(df_trabajo, name = "Cantidad de Abuelos")
 ```
+Sin embargo, si se observa la cantidad de abuelos que respondieron a las preguntas seleccionadas:
+```{r, echo=FALSE}
+gg_miss_upset(subset(df_trabajo, select = c(-RECIBIO_PRIMAS, -RECIBIO_PENSIONES)))
+```
+
+se puede determinar que la mayoría de estos no respondieron a las preguntas que se les hicieron sobre el trabajo. Este mismo procedimiento se repitió con variables diferentes, pero no se obtuvieron resultados distintos a los presentados. Por tal motivo, se decide no realizar un modelo de predicción para la satisfacción del trabajo en los abuelos. En primera instancia se pensó que este comportamiento se debía a que la mayoría de los abuelos estaban pensionados, pero si se observan los abuelos pensionados:
+
+```{r, echo=FALSE}
+ barplot(table(df_trabajo$RECIBIO_PENSIONES), main = "¿Recibe pensión?")
+```
+
+la gran mayoría de estos respondieron que no recibían algún tipo de pensión (2). Por tanto, se puede inferir que la mayoría de los abuelos no trabajan y tampoco reciben pensión, es decir, viven dependientes de sus familiares.
+
 ## Modelos Predictivos en Niños
 ```{r}
 # los datos:
@@ -430,8 +420,8 @@ corr_ninos <- ninos %>% select(SATISFACCION, ESTADO_SALUD, ACTIVIDADES, ETNIA,
                                PERCAPITA, CANT_PERSONAS_HOGAR, ESCUELA_OFICIAL,
                                VALOR_BECA, ORIGEN_SUBSIDIO_EDUC, UBICACION_ESCUELA, 
                                TRANSPORTE_ESCUELA, TIEMPO_TRANSPORTE_ESC, 
-                               ACTIVIDAD_ULT_SEMANA, LUGAR_TRABAJO, 
-                               ENFERMEDAD_CRONICA, INCAP)
+                               EDUCACION_PADRES ,ACTIVIDAD_ULT_SEMANA, 
+                               LUGAR_TRABAJO, ENFERMEDAD_CRONICA, INCAP)
 
 M = cor(corr_ninos, use = "pairwise.complete.obs")
 
@@ -446,8 +436,10 @@ Los datos para niños:
 ```{r}
 #KNN Minutos para escuela, ValorBeca, PERCAPITA
 
-df_ninos <- ninos %>% select(EDAD, INCAP, SATISFACCION, 
-                             PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, UBICACION_ESCUELA, CONDIC_VIDA_HOGAR)
+df_ninos <- ninos %>% select(EDAD, CANT_PERSONAS_HOGAR, INCAP, SATISFACCION, 
+                             PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, 
+                             UBICACION_ESCUELA, EDUCACION_PADRES,
+                             CONDIC_VIDA_HOGAR)
 
 df_ninos['ETNIA'] = as.factor(ninos[,'ETNIA'])
 

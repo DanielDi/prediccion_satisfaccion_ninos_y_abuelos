@@ -35,44 +35,46 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                                                       "Paga la totalidad de la afiliacion"=3,
                                                                       "Paga completamente la empresa"=4,
                                                                       "No paga, es beneficiario "=5)),
-                                           sliderInput("calidadEps",
-                                                       "¿Cómo considera la calidad del prestador de salud?",
-                                                       min = 5,
-                                                       max = 1,
-                                                       value = 1),
+                                           selectInput("calidadEps", label="¿Cómo considera la calidad del prestador de salud?",
+                                                       choices = list("Muy buena"=1,
+                                                                      "Buena"=2,
+                                                                      "Mala"=3,
+                                                                      "Muy mala"=4)),
                                            
-                                           sliderInput("nvSalud",
-                                                       "Satisfacción de Salud",
-                                                       min = 0,
-                                                       max = 10,
-                                                       value = 1),
+                                           selectInput("estadoSalud", label="¿Cuál es el estado de salud general?",
+                                                       choices = list("Muy bueno"=1,
+                                                                      "Bueno"=2,
+                                                                      "Regular"=3,
+                                                                      "Malo"=4)),
+                                           
+                                           selectInput("estrato", 
+                                                       label="Estrato para la tarifa de servicios de la vivienda",
+                                                       choices = list("1. Bajo - Bajo"=1,
+                                                                      "2. Bajo"=2,
+                                                                      "3. Medio - Bajo"=3,
+                                                                      "4. Medio"=4,
+                                                                      "5. Medio - Alto"=5,
+                                                                      "6. Alto"=6,
+                                                                      "8. Planta eléctrica"=8,
+                                                                      "0. No cuenta con servicios"=0)),
 
-                                           sliderInput("nvSeguridad",
-                                                       "Satisfacción de Seguridad",
-                                                       min = 0,
-                                                       max = 10,
-                                                       value = 1),
-                                           sliderInput("nvEducacion",
-                                                       "Satisfacción de Educación",
-                                                       min = 1,
-                                                       max = 9,
-                                                       value = 1),
-                                           sliderInput("condHogar",
-                                                       "Condiciones del Hogar",
-                                                       min = 1,
-                                                       max = 4,
-                                                       value = 1),
-                                           sliderInput("nvEducativo",
-                                                       "Nivel Educativo",
-                                                       min = 1,
-                                                       max = 9,
-                                                       value = 1)
+                                           # sliderInput("condHogar",
+                                           #             "Condiciones del Hogar",
+                                           #             min = 1,
+                                           #             max = 4,
+                                           #             value = 1),
+                                           # sliderInput("nvEducativo",
+                                           #             "Nivel Educativo",
+                                           #             min = 1,
+                                           #             max = 9,
+                                           #             value = 1)
                                          ),
                                          
                                          
                                          # Show a plot of the generated distribution
                                          mainPanel(
-                                           textOutput("prediccion")
+                                           p("Satisfacción estimada de la salud: "),
+                                           textOutput("prediccionSalud")
                                            # plotOutput("distPlot")
                                          )
                                        )
@@ -93,7 +95,12 @@ ui <- fluidPage(theme=shinytheme("superhero"),
 server <- function(input, output) {
   # Modelo Salud
   output$prediccionSalud <- renderText({
-    entrada <- data.frame()
+    entrada <- data.frame(PAGO_EPS=as.integer(input$pagoEps),
+                          CALIDAD_EPS=as.numeric(input$calidadEps),
+                          ESTADO_SALUD=as.integer(input$estadoSalud),
+                          ESTRATO=as.integer(input$estrato))
+    salida <- predict(lm_salud, newdata = entrada)
+    
   })
   
   # Modelo General
