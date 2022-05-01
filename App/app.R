@@ -57,30 +57,24 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                                                       "6. Alto"=6,
                                                                       "8. Planta eléctrica"=8,
                                                                       "0. No cuenta con servicios"=0)),
-                                           
-                                           sliderInput("estrato",
-                                                       "Estrato para la tarifa de servicios de la vivienda",
-                                                       min = 0,
-                                                       max = 9,
-                                                       value = 1),
 
-
-                                           sliderInput("condHogar",
-                                                       "Condiciones del Hogar",
-                                                       min = 1,
-                                                       max = 4,
-                                                       value = 1),
-                                           sliderInput("nvEducativo",
-                                                       "Nivel Educativo",
-                                                       min = 1,
-                                                       max = 9,
-                                                       value = 1)
+                                           # sliderInput("condHogar",
+                                           #             "Condiciones del Hogar",
+                                           #             min = 1,
+                                           #             max = 4,
+                                           #             value = 1),
+                                           # sliderInput("nvEducativo",
+                                           #             "Nivel Educativo",
+                                           #             min = 1,
+                                           #             max = 9,
+                                           #             value = 1)
                                          ),
                                          
                                          
                                          # Show a plot of the generated distribution
                                          mainPanel(
-                                           textOutput("prediccion")
+                                           p("Satisfacción estimada de la salud: "),
+                                           textOutput("prediccionSalud")
                                            # plotOutput("distPlot")
                                          )
                                        )
@@ -101,7 +95,12 @@ ui <- fluidPage(theme=shinytheme("superhero"),
 server <- function(input, output) {
   # Modelo Salud
   output$prediccionSalud <- renderText({
-    entrada <- data.frame()
+    entrada <- data.frame(PAGO_EPS=as.integer(input$pagoEps),
+                          CALIDAD_EPS=as.numeric(input$calidadEps),
+                          ESTADO_SALUD=as.integer(input$estadoSalud),
+                          ESTRATO=as.integer(input$estrato))
+    salida <- predict(lm_salud, newdata = entrada)
+    
   })
   
   # Modelo General
