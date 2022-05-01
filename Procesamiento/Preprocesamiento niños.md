@@ -159,8 +159,6 @@ df_salud = df_salud[['ID_Persona', 'AFILIADO_SALUD', 'ESTADO_SALUD', 'ENFERMEDAD
                      'INCAP']]
 ```
 
-    /tmp/ipykernel_331/4020623098.py:2: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead.  To get a de-fragmented frame, use `newframe = frame.copy()`
-      dataFrame['ID_Persona'] = (dataFrame['DIRECTORIO'].astype(str) +
 
 
 ### Trabajo infantil
@@ -182,9 +180,6 @@ df_trabajo.rename(columns={'P171':'HORAS_TRABAJO', 'P400':'ACTIVIDAD_ULT_SEMANA'
 df_trabajo = df_trabajo[['ID_Persona', 'HORAS_TRABAJO', 'ACTIVIDAD_ULT_SEMANA', 
                          'TRABAJO1', 'TRABAJO2', 'TRABAJO3', 'TRABAJO4', 'LUGAR_TRABAJO']]
 ```
-
-    /opt/conda/lib/python3.9/site-packages/IPython/core/interactiveshell.py:3457: DtypeWarning: Columns (5) have mixed types.Specify dtype option on import or set low_memory=False.
-      exec(code_obj, self.user_global_ns, self.user_ns)
 
 
 ### Servicios del hogar
@@ -218,9 +213,6 @@ df_cond_hogar.rename(columns={'P9090':'INCRESOS_AUTOPERCIBIDOS_HOGAR',
 df_cond_hogar = df_cond_hogar[['ID_Hogar', 'INCRESOS_AUTOPERCIBIDOS_HOGAR', 
                                'CONDIC_VIDA_HOGAR']]
 ```
-
-    /opt/conda/lib/python3.9/site-packages/IPython/core/interactiveshell.py:3457: DtypeWarning: Columns (29) have mixed types.Specify dtype option on import or set low_memory=False.
-      exec(code_obj, self.user_global_ns, self.user_ns)
 
 
 ## Construcción del dataframe general
@@ -784,19 +776,6 @@ pd.DataFrame({'corr':df_corr,'sum':df1.sum()})
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -859,27 +838,9 @@ plt.figure(figsize=(20,20))
 pd.DataFrame({'corr':df_corr,'sum':df1.sum()})
 ```
 
-    /tmp/ipykernel_331/100710561.py:5: FutureWarning: Dropping of nuisance columns in DataFrame reductions (with 'numeric_only=None') is deprecated; in a future version this will raise TypeError.  Select only valid columns before calling the reduction.
-      pd.DataFrame({'corr':df_corr,'sum':df1.sum()})
-
-
-
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -975,19 +936,6 @@ pd.DataFrame({'corr':df_corr,'sum':df1.sum()})
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1063,19 +1011,6 @@ pd.DataFrame({'corr':df_corr,'sum':df1.sum()})
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
