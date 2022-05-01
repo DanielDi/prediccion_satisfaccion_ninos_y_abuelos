@@ -244,23 +244,24 @@ Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibl
 * CALIDAD_PRESTADOR (p6181)
 * ESTADO_SALUD (p6127)
 * TIPO_PAGO (p6115)
+* REGIMEN (P6100)
+* ENFERMEDAD_CRONICA (P1930)
 
 #### Análisis Descriptivo
 ```{r, echo = FALSE}
 # Une las tablas
 df_salud <- merge(x = comp_hogar, y = salud, by = "ID_Persona")
 df_salud <- merge(x = datos_vivienda, y = df_salud, by = "DIRECTORIO")
-head(df_salud)
+
 # Selecciona solo las personas de 3era edad
 df_salud <- subset(df_salud, df_salud$Clasificación == "3ra_edad")
 
 # Selecciona las variables de interés
-df_salud <- subset(df_salud, select = c("P1897", "P8551", "P6181", "P6127", "P8520S1A1"))
-df_salud <- na.omit(df_salud)
+df_salud <- subset(df_salud, select = c("P1897", "P6181", "P6127", "P8520S1A1", "P6100", "P1930"))
 
 # Cambia los nombres de las columnas
-names(df_salud) = c("SATISFACCION", "PAGO_EPS", "CALIDAD_EPS", "ESTADO_SALUD", "ESTRATO")
-head(df_salud)
+names(df_salud) = c("SATISFACCION", "CALIDAD_EPS", "ESTADO_SALUD", "ESTRATO", "REGIMEN", "ENFERMEDAD_CRONICA")
+summary(df_salud$REGIMEN)
 ```
 
 ##### Matriz de Correlaciones
@@ -303,10 +304,12 @@ Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibl
 * ESTADO_CIVIL (P5502)
 * SEXO (P6020´)
 * ESTRATO (P8520S1A1)
-* INGRESOS (P8624)
-* HORAS_LABORALES (P415)
+* INGRESOS (P8624) -> por fuera por muchos nans
+* HORAS_LABORALES (P415) -> fuera
 * NIVEL_DE_SEGURIDAD (P9010)
 * CONDICIONES_DE_VIDA_HOGAR (P9030)
+* ES_CAMPESINO (P2059)
+* ES_POBRE (P5230) -> fuera
 
 #### Análisis Descriptivo
 ```{r, echo = FALSE}
@@ -315,19 +318,18 @@ df_seguridad <- merge(x = comp_hogar, y = fuerza_trabajo, by = "ID_Persona")
 df_seguridad <- merge(x = df_seguridad, y = cond_hogar, by = "ID_Hogar")
 df_seguridad <- merge(x = df_seguridad, y = datos_vivienda, by = "DIRECTORIO")
 
-head(df_seguridad)
 # Selecciona solo las personas de 3era edad
 df_seguridad <- subset(df_seguridad, df_seguridad$Clasificación == "3ra_edad")
 
 # Selecciona las variables de interés
 df_seguridad <- subset(df_seguridad, select = c("P1898", "P5502", "P6020", "P8520S1A1", 
-                                        "P8624", "P415", "P9010", "P9030"))
-df_seguridad <- na.omit(df_seguridad)
+                                                "P9010", "P9030", "P2059"))
 
 # Cambia los nombres de las columnas
-names(df_seguridad) = c("SATISFACCION", "ESTADO_CIVIL", "SEXO", "ESTRATO", "INGRESOS",
-                      "HORAS_LABORALES", "NIVEL_DE_SEGURIDAD", "CONDICIONES_DE_VIDA_HOGAR")
-head(df_seguridad)
+names(df_seguridad) = c("SATISFACCION", "ESTADO_CIVIL", "SEXO", "ESTRATO", 
+                        "NIVEL_DE_SEGURIDAD", "CONDICIONES_DE_VIDA_HOGAR",
+                      "ES_CAMPESINO")
+
 ```
 
 ##### Matriz de Correlaciones
