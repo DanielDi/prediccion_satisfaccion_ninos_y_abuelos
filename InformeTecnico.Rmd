@@ -3,9 +3,9 @@ title: ''
 author: ''
 date: ''
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 lang: es
 ---
 \begin{titlepage}
@@ -513,7 +513,7 @@ modelo
 ```
 
 ```{r}
-test_pred <- predict(modelo2, newdata = test)
+test_pred <- predict(modelo, newdata = test)
 colnames(test_pred) <- c('pred_Satisfaccion')
 test_pred <- cbind(test_pred, test['SATISFACCION'])
 
@@ -522,7 +522,7 @@ table(cat_test_pred)
 ```
 
 ```{r}
-train_pred <- predict(modelo2, newdata = train)
+train_pred <- predict(modelo, newdata = train)
 colnames(train_pred) <- c('pred_Satisfaccion')
 train_pred <- cbind(train_pred, train['SATISFACCION'])
 
