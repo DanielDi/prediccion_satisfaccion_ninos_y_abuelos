@@ -460,7 +460,7 @@ ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6,
 
 Los datos para niños:
 ```{r}
-df_ninos <- ninos %>% select(EDAD, CANT_PERSONAS_HOGAR, INCAP, SATISFACCION, 
+df_ninos <- ninos %>% select(INCAP, SATISFACCION, 
                              PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, 
                              UBICACION_ESCUELA, EDUCACION_PADRES,
                              CONDIC_VIDA_HOGAR, TIEMPO_TRANSPORTE_ESC, HORAS_TRABAJO)
@@ -514,15 +514,18 @@ test <- df_ninos[datos1 == 2,]
 
 * Modelo de árbol de decisión
 ```{r}
-modelo <- ctree(formula = SATISFACCION ~ ., data=train, 
+ctreeNiños <- ctree(formula = SATISFACCION ~ ., data=train, 
                 controls = ctree_control(mincriterion = 0.7))
+
+save(file="App/data/modeloSatisfaccionNiños.RData",
+                              list=c("ctreeNiños"))
 ```
 
 ```{r}
-png(file = "decision_tree.png", width = 6000, height = 3000, )
-#plot(modelo)
+png(file = "App/www/decision_tree_niños.png", width = 6000, height = 3000, )
+plot(ctreeNiños)
 dev.off()
-modelo
+ctreeNiños
 ```
 
 ```{r}
