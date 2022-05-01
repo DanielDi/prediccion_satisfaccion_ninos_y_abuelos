@@ -53,11 +53,42 @@ df_car_hogar=df_car_hogar.drop(indx_otro)
 
 # Renombrar las variables que usaremos
 df_car_hogar.rename(columns={'P6040':'EDAD', 'P6080':'ETNIA', 'P6081':'VIVE_CON_PADRE',
-                    'P6083':'VIVE_CON_MADRE'}, inplace=True)
+                    'P6083':'VIVE_CON_MADRE', 'P6087':'EDUCACION_PADRE', 
+                    'P6088':'EDUCACION_MADRE'}, inplace=True)
+
+df_car_hogar = df_car_hogar.astype({'EDUCACION_MADRE':float, 'EDUCACION_PADRE':float})
+```
+Las variables de 'EDUCACION_MADRE' y 'EDUCACION_PADRE' las resumiremos como sigue:
+0. Ninguna
+1. Primaria
+2. Secundaria
+3. Técnica o Tecnología
+4. Universidad
+
+```py
+df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(2.0, 1.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(3.0, 2.0).replace(4, 2.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(5.0, 3.0).replace(6, 3.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(7.0, 4.0).replace(8, 4.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(9.0, 0.0).replace(10.0, 0.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_PADRE.replace(np.nan, -1.0), overwrite = True)
+
+df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(2.0, 1.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(3.0, 2.0).replace(4, 2.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(5.0, 3.0).replace(6, 3.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(7.0, 4.0).replace(8, 4.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(9.0, 0.0).replace(10.0, 0.0), overwrite = True)
+df_car_hogar.update(df_car_hogar.EDUCACION_MADRE.replace(np.nan, -1.0), overwrite = True)
+```
+Generamos la variable de 'EDUCACION_PADRES' como el máximo entre 'EDUCACION_MADRE' y 'EDUCACION_PADRE'
+```py
+df_car_hogar['EDUCACION_PADRES'] = df_car_hogar[['EDUCACION_PADRE', 'EDUCACION_MADRE']].max(axis=1)
+
+df_car_hogar.loc[df_car_hogar['EDUCACION_PADRES'] == -1.0, 'EDUCACION_PADRES'] = np.nan
 
 # Sacar las variables que se van a usar posteriormente
 df_car_hogar = df_car_hogar[['ID_Hogar', 'ID_Persona', 'EDAD', 'ETNIA', 'VIVE_CON_PADRE', 
-                             'VIVE_CON_MADRE']]
+                             'VIVE_CON_MADRE', 'EDUCACION_PADRES']]
 ```
 ## Educación
 ```py
