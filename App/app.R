@@ -16,6 +16,8 @@ source('modelosAbuelosUI.R')
 source('modeloNiños.R')
 source('visualizacionUI.R')
 source('aboutUsUI.R')
+load('data/dfNinos.RData')
+load("data/modeloSatisfaccionNiños.RData")
 load("data/modeloSatisfaccion.RData")
 load("data/modeloSatisfaccionSalud.RData")
 load("data/modeloSatisfaccionSeguridad.RData")
@@ -134,7 +136,7 @@ server <- function(input, output) {
                           ACTIVIDAD_ULT_SEMANA=addNA(factor(input$actividadUltSemana, levels=levels(df_ninos$ACTIVIDAD_ULT_SEMANA))),
                           LUGAR_TRABAJO=addNA(factor(input$lugarTrabajo, levels=levels(df_ninos$LUGAR_TRABAJO)))
     )
-    salida <- anapply(predict(ctreeNiños, entrada)/5.6, as.integer)+1
+    salida <- predict(ctreeNiños, entrada)
   })
   
 }

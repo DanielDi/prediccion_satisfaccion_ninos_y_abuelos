@@ -519,6 +519,8 @@ ctreeNiños <- ctree(formula = SATISFACCION ~ ., data=train,
 
 save(file="App/data/modeloSatisfaccionNiños.RData",
                               list=c("ctreeNiños"))
+save(file="App/data/dfNinos.RData",
+                              list=c("df_ninos"))
 ```
 
 ```{r, echo = F}
