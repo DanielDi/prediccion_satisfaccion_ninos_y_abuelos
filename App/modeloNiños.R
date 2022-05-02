@@ -148,7 +148,7 @@ tabModeloNinos <-
                         
                       ),
                         h4("Satisfacción de vida estimada: "),
-                        h4("29.93448")
+                        h4(textOutput("prediccionNinos"))
                       )
       ),
       
