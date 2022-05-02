@@ -578,13 +578,6 @@ save(file="App/data/modeloSatisfaccionNiños.RData",
 ```
 
 ```{r, echo = F}
-png(file = "App/www/decision_tree_niños.png", width = 6000, height = 3000, )
-plot(ctreeNiños)
-dev.off()
-ctreeNiños
-```
-
-```{r, echo = F}
 test_pred <- predict(ctreeNiños, newdata = test)
 colnames(test_pred) <- c('pred_Satisfaccion')
 test_pred <- cbind(test_pred, test['SATISFACCION'])
@@ -694,7 +687,14 @@ levels(cat_test_pred$SATISFACCION)
 
 # Conclusiones
 
+* El modelo KNN no se ajustó a los datos categóricos, por tanto se tuvieron que ajustar con modelos de regresión lineal.  
+* Las variables no se correlacionaron como se esperaba. Un motivo puede ser que las correlaciones utilizadas no hayan sido las adecuadas para este tipo de datos.  
+
 # Recomendaciones
+
+* Realizar un análisis más detallado sobre las variables categóricas ya que en este estudio se mezclaron con continuas, lo cual genera dudas en los resultados.  
+* Realizar una ingenería de características con mayor detenimiento ya que muchas variables que por sí solas no aportan, pero al juntar otras pueden generar información valiosa.
+* Probar con otros modelos que realizan una mejor precisión para datos categóricos.
 
 # Bibliografía
 
