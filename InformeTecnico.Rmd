@@ -47,6 +47,7 @@ require(kableExtra)
 require(ggcorrplot)
 require(magrittr)
 library(naniar)
+library(Metrics)
 library(polycor)
 
 knitr::opts_chunk$set(echo = TRUE)
@@ -189,19 +190,32 @@ summary(lm1)
 
 test$Y_Predict <- predict(lm1, newdata=test)
 head(test[ , c('Y', 'Y_Predict')])
-entrada <- data.frame(X1=3,
-                      X2=3,
-                      X3=3,
-                      X4=3,
-                      X5=3)
-salida <- predict(lm1,newdata = entrada)
-print(salida)
+
 # Conexión con la aplicación
 #SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, 
 #                                     NIVEL_DE_EDUCACION, COND_VIDA_DEL_HOGAR, TRABAJO_AUTOPERCIBIDO
 save(file="App/data/modeloSatisfaccion.RData",
                               list=c("lm1"))
 ```
+### Análisis del modelo
+
+Se presenta una gráfica de los Predichos vs Observados:
+
+```{r, echo = F}
+plot(test$Y_Predict,test$SATISFACCION,
+     main = c("Predichos (remendados) vs Observados","Validación"),
+     xlim = c(0,10), ylim = c(0,10),
+     las=1, xlab = "Valores predichos (remendados)",
+     ylab = "Valores observados")
+```
+Además, las medidades de error son las siguientes:
+```{r, echo = F}
+MSE_VIDA <- mse(test$SATISFACCION, test$Y_Predict)
+MAE_VIDA <- mae(test$SATISFACCION, test$Y_Predict)
+```
+
+* *MSE*: `r MSE_VIDA`  
+* *MAE*: `r MAE_VIDA`
 
 ### Satisfacción en la Salud
 
@@ -272,6 +286,27 @@ save(file="App/data/modeloSatisfaccionSalud.RData",
 
 str(train_salud)
 ```
+
+### Análisis del modelo
+
+Se presenta una gráfica de los Predichos vs Observados:
+
+```{r, echo = F}
+plot(test_salud$Y_Predict,test_salud$SATISFACCION,
+     main = c("Predichos (remendados) vs Observados","Validación"),
+     xlim = c(0,10), ylim = c(0,10),
+     las=1, xlab = "Valores predichos (remendados)",
+     ylab = "Valores observados")
+```
+
+Además, las medidades de error son las siguientes:
+```{r, echo = F}
+MSE_SALUD <- mse(test_salud$SATISFACCION, test_salud$Y_Predict)
+MAE_SALUD <- mae(test_salud$SATISFACCION, test_salud$Y_Predict)
+```
+
+* *MSE*: `r MSE_SALUD`  
+* *MAE*: `r MAE_SALUD`
 
 ### Satisfacción sobre el Nivel de Seguridad
 
@@ -377,6 +412,27 @@ head(test_seguridad[ , c('SATISFACCION', 'Y_Predict')])
 save(file="App/data/modeloSatisfaccionSeguridad.RData",
                               list=c("lm_seguridad"))
 ```
+
+### Análisis del modelo
+
+Se presenta una gráfica de los Predichos vs Observados:
+
+```{r}
+plot(test_seguridad$Y_Predict,test_seguridad$SATISFACCION,
+     main = c("Predichos (remendados) vs Observados","Validación"),
+     xlim = c(0,10), ylim = c(0,10),
+     las=1, xlab = "Valores predichos (remendados)",
+     ylab = "Valores observados")
+```
+
+Además, las medidades de error son las siguientes:
+```{r, echo = F}
+MSE_SEGURIDAD <- mse(test_seguridad$SATISFACCION, test_seguridad$Y_Predict)
+MAE_SEGURIDAD <- mae(test_seguridad$SATISFACCION, test_seguridad$Y_Predict)
+```
+* *MSE*: `r MSE_SEGURIDAD`  
+* *MAE*: `r MAE_SEGURIDAD`
+
 
 ### Satisfacción en el Trabajo
 Finalmente, las características predictoras de la satisfacción del trabajo fueron obtenidas siguiendo [5]. Este estudio presenta unas variables relacionadas con la satisfacción laboral y correlaciones entre sí. Basados en estas variables, se buscaron los análogos en la base de datos que se tiene y se lograron de terminar las siguientes:
@@ -549,14 +605,11 @@ table(cat_train_pred)
 En lo consiguiente calculamos unas métricas para mejorar el arbol:
 Sacamos paso a paso una del los variables y miramos que impacto tiene cada.
 
-**Resultados:**
-* CANT_PERSONAS_HOGAR y EDAD tienen un impacto negativo en los datos de la prueba y positivo en entrenamiento.
-  ** Significa que estos variables pruducen "overfitting".
-* PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, UBICACION_ESCUELA, EDUCACION_PADRES, CONDIC_VIDA_HOGAR, ETNIA, ESCUELA_OFICIAL, TRANSPORTE_ESCUELA, EDUCACION_PADRES, ACTIVIDAD_ULT_SEMANA, ENFERMEDAD_CRONICA tienen un impacto estrictamente positivo.
-* INCAP, LUGAR_TRABAJO, TIEMPO_TRANSPORTE_ESC tienen a veses un impacto positivo y en otros casos producen overfitting
- ** Decidimos usar estos variables porque el impacto positivo es más grande que el negativo. 
-* HORAS_TRABAJO y VALOR_BECA no van a usar, sin embargo, tienen una impacto positivo.
- ** Sacamos VALOR_BECA porque la correlación que hemos visto antes depende mucho de un valor atípico.
+#### Resultados:
+* CANT_PERSONAS_HOGAR y EDAD tienen un impacto negativo en los datos de la prueba y positivo en entrenamiento. Esto significa que estos variables pruducen "overfitting".  
+* PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, UBICACION_ESCUELA, EDUCACION_PADRES, CONDIC_VIDA_HOGAR, ETNIA, ESCUELA_OFICIAL, TRANSPORTE_ESCUELA, EDUCACION_PADRES, ACTIVIDAD_ULT_SEMANA, ENFERMEDAD_CRONICA tienen un impacto estrictamente positivo.  
+* INCAP, LUGAR_TRABAJO, TIEMPO_TRANSPORTE_ESC tienen a veses un impacto positivo y en otros casos producen overfitting. Decidimos usar estos variables porque el impacto positivo es más grande que el negativo.  
+* HORAS_TRABAJO y VALOR_BECA no van a usar, sin embargo, tienen una impacto positivo. Sacamos VALOR_BECA porque la correlación que hemos visto antes depende mucho de un valor atípico.  
 
 #### Cálculo de métricas 
 ```{r, echo = F}
@@ -575,14 +628,14 @@ MAE_cat_train <- mean(abs(cat_train_pred$SATISFACCION - cat_train_pred$pred_Sati
 RMSE_cat_train <- sqrt(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2))
 ```
 Entrenamiento
-- MSE: {MSE_train}
-- MS: {MS_trains}
-- MAE: {MAE_train}
+- MSE: `r MSE_train`  
+- MS: `r MS_train`  
+- MAE: `r MAE_train`  
 Para las 10 categorías
-- MSE: {MSE_cat_train}
-- MS: {MS_cat_train}
-- MAE: {MAE_cat_train}
-- RMSE: {RMSE_cat_train}
+- MSE: `r MSE_cat_train`  
+- MS: `r MS_cat_train`  
+- MAE: `r MAE_cat_train`  
+- RMSE: `r RMSE_cat_train`  
 
 
 ```{r}
@@ -597,12 +650,12 @@ MAE_cat_test <- mean(abs(cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfa
 RMSE_test <- sqrt(mean((cat_test_pred$SATISFACCION - cat_test_pred$pred_Satisfaccion)^2))
 ```
 Prueba
-- MSE: {MSE_test}
-- MAE: {MAE_test}
+- MSE: `r MSE_test`  
+- MAE: `r MAE_test`  
 Para las 10 categorías
-- MSE: {MSE_cat_test}
-- MAE: {MAE_cat_test}
-- RMSE: {RMSE_test}
+- MSE: `r MSE_cat_test`  
+- MAE: `r MAE_cat_test`  
+- RMSE: `r RMSE_test`  
 
 
 #### Matriz de confusión de los datos

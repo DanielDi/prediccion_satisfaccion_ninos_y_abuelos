@@ -29,7 +29,8 @@ ui <- fluidPage(theme=shinytheme("united"),
                                     h4("El Instituto Colombiano de Bienestar Familiar es una entidad que trabaja por la prevención y protección integral de la primera infancia, la niñez, la adolescencia y el bienestar general de las familias en Colombia, llegando a millones de colombianos mediante sus programas, estrategias y servicios de atención.  En el marco de los objetivos de esta institución se encontró que el ICBF actualmente no cuenta con una herramienta para conocer en prospectiva, y de forma adecuada y efectiva la satisfacción general de vida tanto de niños como de adultos en la tercera edad. Es para ellos de vital importancia conocer esta información pues es un indicador fundamental a tener en cuenta a la hora de crear programas preventivos y de protección que tienen como objetivo el mejoramiento de vida de la población destinataria. Por esto se busca implementar en el ICBF tanto los modelos sub-modelos como el modelo de satisfacción general, para que sea usado por la institución en pro de mejorar futuros planeamientos en todo proyecto social que involucre niños y adultos de la tercera edad como población objetivo."),
                                     img(src="LOGO.png", height = 400, width = 400),img(src="icbf.png", height = 400, width = 400)
                            ),
-                           tabModeloAbuelos, 
+                           tabModeloAbuelos,
+                           tabPanel("Modelo para Niños"),
                            tabVisualizacion,
                            tabAcercaDeNosotros
                            
