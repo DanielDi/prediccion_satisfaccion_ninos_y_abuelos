@@ -11,8 +11,12 @@ library(caret)
 library(shinydashboard)
 library(shinythemes)
 source('modelosAbuelosUI.R')
+source('visualizacionUI.R')
 load("data/modeloSatisfaccion.RData")
 load("data/modeloSatisfaccionSalud.RData")
+load("data/dfSalud.RData")
+load("data/modeloSatisfaccionSeguridad.RData")
+
 
 ui <- fluidPage(theme=shinytheme("superhero"),
                 navbarPage(title = "Nombre Proyecto",
@@ -20,14 +24,7 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                     h4("Explicación general del problema, motivaciones principales y usos de las predicciones del modelo enfocadas en los objetivos del ICBF")   
                            ),
                            tabModeloAbuelos,
-                           tabPanel("Visualizacion",
-                                    dashboardPage(title = "HOLA",skin = "red",
-                                                  dashboardHeader(),
-                                                  dashboardSidebar(),
-                                                  dashboardBody()
-                                    )
-
-                           )
+                           tabVisualizacion
                            
                 ))
 
@@ -54,6 +51,27 @@ server <- function(input, output) {
     return(salida)
     
   })
+  
+  #grafico
+  
+  output$col <- renderPlot({
+    
+    
+    #colm<-as.numeric(input$var)
+    graf<-df_salud[,input$var] %>% table() %>%  barplot(col="purple")
+    return(graf)
+    
+    #colm <- input$var
+    #a <- df_salud %>% count(colm)
+    #ggplot(a, aes(x=reorder(colm, n), y=n))+
+    #geom_col(fill="Purple",alpha=0.4)+
+    # coord_flip()+
+    #ylab("Cantidad")+
+    #xlab("Respuesta")+
+    #geom_text(aes(label=n), position = "stack", hjust = -0.1, size=2.5)
+    
+  })
+  
 }
 
 # Run the application 
