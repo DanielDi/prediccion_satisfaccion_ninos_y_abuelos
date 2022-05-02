@@ -3,9 +3,9 @@ title: ''
 author: ''
 date: ''
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 lang: es
 ---
 \begin{titlepage}
@@ -54,14 +54,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introducción 
 
-La satisfacción de la vida y la felicidad varía entre países \cite{b7} y juegan un papel importante en el desarrollo de un país. Sin embargo, no se logró determinar documentación o estudios relacionados sobre cómo se pueden predecir estos factores en Colombia dados unos parámetros. Por tal motivo, se propone el plantemiento, desarrollo, análisis y posterior productización de un modelo con el cual se busca predecir la satisfacción de niños y abuelos. Para lograr esto, se toma como base una encuesta realizada por el DANE en el 2020: Colombia - Encuesta Nacional de Calidad de Vida - ECV 2020. Esta investigación, según el DANE "Busca cuantificar y caracterizar las condiciones socioeconómicas de los hogares colombianos, con el fin de obtener la información necesaria para la actualización de indicadores sociales a nivel de viviendas, hogares y personas, y para la definición de políticas que permitan diseñar y ejecutar planes sociales." (Metodologia ECV, 2009, p.17)   
+La satisfacción de la vida y la felicidad varía entre países [7] y juegan un papel importante en el desarrollo de un país. Sin embargo, no se logró determinar documentación o estudios relacionados sobre cómo se pueden predecir estos factores en Colombia dados unos parámetros. Por tal motivo, se propone el plantemiento, desarrollo, análisis y posterior productización de un modelo con el cual se busca predecir la satisfacción de niños y abuelos. Para lograr esto, se toma como base una encuesta realizada por el DANE en el 2020: Colombia - Encuesta Nacional de Calidad de Vida - ECV 2020. Esta investigación, según el DANE "Busca cuantificar y caracterizar las condiciones socioeconómicas de los hogares colombianos, con el fin de obtener la información necesaria para la actualización de indicadores sociales a nivel de viviendas, hogares y personas, y para la definición de políticas que permitan diseñar y ejecutar planes sociales." (Metodologia ECV, 2009, p.17)   
 La estructura del estudio se planteó de la siguiente manera: se hizo una búsqueda exhaustiva sobre documentación para determinar cuáles de las variables que se tienen afectan de manera significativa la satisfacción. Después se planteó un modelo general, sin embargo al revisar las correlaciones entre las variables predictoras se dicidió partir ese modelo general en tres sub-modelos: satisfacción de salud, seguridad y trabajo. Para cada cada uno de estos también se realizó la búsqueda de documentación al respecto. Adicionalmente, se creó una página web para poder interactuar con los modelos. Finalmente, se obtuvieron los resultados y plantearon las conclusiones. 
 
 # Planteamiento del Problema 
 
 El Instituto Colombiano de Bienestar Familiar es una entidad que trabaja por la prevención y protección integral de la primera infancia, la niñez, la adolescencia y el bienestar general de las familias en Colombia, llegando a millones de colombianos mediante sus programas, estrategias y servicios de atención.  En el marco de los objetivos de esta institución se encontró que el ICBF actualmente no cuenta con una herramienta para conocer en prospectiva, y de forma adecuada y efectiva la satisfacción general de vida tanto de niños como de adultos en la tercera edad. Es para ellos de vital importancia conocer esta información pues es un indicador fundamental a tener en cuenta a la hora de crear programas preventivos y de protección que tienen como objetivo el mejoramiento de vida de la población destinataria. Por esto se busca implementar en el ICBF tanto los 3 sub-modelos como el modelo de satisfacción general, para que sea usado por la institución en pro de mejorar futuros planeamientos en todo proyecto social que involucre niños y adultos de la tercera edad como población objetivo.    
-
-
 
 
 # Justificación 
@@ -74,8 +72,9 @@ Una vez adoptada esta definicion se analizo cuantas observaciones de la ECV cump
 
 ## Abuelos
 
-Para los abuelos, al igual que con los niños, se penso inicialmente en tomar un rango de edad que tomara la definicion popular de este colectivo, los adultos de la tercera edad (mayores de 60 años). Sin embargo, luego planteamos que debiamos tener en cuenta cual es la definicion literal de abuelo,  y mediante un sistema de grafos logramos determinar el numero de hombres y mujeres que tenian un nieto. Filtrandolos por su rango edad.
+Para los abuelos, al igual que con los niños, se penso inicialmente en tomar un rango de edad que tomara la definicion popular de este colectivo, los adultos de la tercera edad (mayores de 60 años). Sin embargo, luego planteamos que debiamos tener en cuenta cual es la definicion literal de abuelo,  y mediante un sistema de grafos logramos determinar el numero de hombres y mujeres que tenian un nieto. Filtrándolos por su rango edad se observo que se tienen registrados un total de 1467 abuelos mayores de 60 años, y 1049 abuelos menores de 60 años.
 
+<<<<<<< HEAD
 Filtrandolos por su rango edad se observo que se tienen registrados un total de 1467 abuelos mayores de 60 años, y 1049 abuelos menores de 60 años.
 
 Se observa que con la definicion inicial estabamos omitiendo un total de 1049 observaciones, ademas, se observa que los abuelos resgitrados en la base de datos son relativamente pocos pues solo representan el x% del total de personas.
@@ -98,7 +97,11 @@ Para predecir la satisfacción se tomaron en cuenta las evidencias halladas en l
 * I_HOGAR
 * PERCAPITA
 * COND_VIDA_DEL_HOGAR
+=======
+Se observa que con la definicion inicial estábamos omitiendo un total de 1049 observaciones, además, se observa que los abuelos registrados en la base de datos son relativamente pocos.
+>>>>>>> ab3af27a4633d0417dc37c4cb36bf02cb6f5d2bb
 
+Ante esta situación tomamos la decisión de tomar solamente a las personas de la tercera edad para nuestro modelo.
 
 
 ```{r lectura_datos, echo=F}
@@ -111,52 +114,35 @@ serv_hogar <- read.csv2("Datos/servicios_hogar.csv", header=TRUE, dec=".", encod
 fuerza_trabajo <- read.csv2("Datos/fuerza_trabajo.csv", header=TRUE, dec=".", encoding="UTF-8")
 comp_hogar <- read.csv2("Datos/caracteristicas_composicion_del_hogar.csv", header=TRUE, dec=".", encoding="UTF-8")
 ```
-El primer paso para verificar si las variables anteriores servirán para ajustar algún modelo es hacer un análisis descriptivo de cada una agrupando los niños y abuelos.
 
 # Modelos Predictivos
-Inicialmente, se intentó englobar en un modelo a los abuelos y niños con el fin de predecir la satisfacción. Sin embargo, como lo ilustra la tabla 1, las variables objetivos que se seleccionaron no fueron respondidas, en su mayoría, por niños. Este comportamiento se asemeja con los resultados encontrados en \cite{b7}, donde se puede observar que los abuelos y niños tienen diferentes definiciones de satisfacción y, por ende, diferentes factores que la influyen. Por esta razón, se decidió trabajar de forma independiente los modelos para los niños y abuelos.
-
+Inicialmente, se intentó englobar en un modelo a los abuelos y niños con el fin de predecir la satisfacción. Sin embargo, como lo ilustra la Figura 1, las variables objetivos que se seleccionaron no fueron respondidas, en su mayoría, por niños. Este comportamiento se asemeja con los resultados encontrados en [7], donde se puede observar que los abuelos y niños tienen diferentes definiciones de satisfacción y, por ende, diferentes factores que la influyen. Por esta razón, se decidió trabajar de forma independiente los modelos para los niños y abuelos. 
 
 ## Modelos Predictivos en Abuelos
-```{r, echo = FALSE}
-library(caret)
-df_abuelos <- subset(personas, personas$Clasificación != "niño")
-```
-### Satisfacción de la Vida en General
-
-#### Análisis Descriptivo
-
-##### Conteo de respuestas
-
-```{r,echo=F}
-countedAnswers <- aggregate(. ~ Clasificación, personas, FUN = function(x) sum(!is.na(x)), na.action = NULL)
-kable(countedAnswers[,1:8]) %>% 
-  kable_styling(position = "center")%>%
-  kable_styling(latex_options = "HOLD_position") %>% 
-  kable_styling(latex_options="scale_down")
-kable(countedAnswers[,9:15]) %>% 
-  kable_styling(position = "center")%>%
-  kable_styling(latex_options = "HOLD_position") %>% 
-  kable_styling(latex_options="scale_down")
-```
-
-Según la tabla anterior las variables que preguntan directamente por la satisfacción no son respondidas por los niños, por lo tanto se decide abordar y desarrollar modelos por separado para niños y abuelos.
 
 ```{r, echo = FALSE}
-
-# Se descartan las columnas que no hacen parte de la predicción
-datos <- subset(personas, select = c(SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, 
-                                     NIVEL_DE_EDUCACION, COND_VIDA_DEL_HOGAR, TRABAJO_AUTOPERCIBIDO))
-
-
-# Por facilidad, se renombran las variables a Xi, 1 <= i <= 11
-names(datos) <- c('Y', 'X1','X2', 'X3', 'X4', 'X5')
-datos <- na.omit(datos)
+# Descarta los datos que no son de 3ra edad.
+df_abuelos <- subset(personas, personas$Clasificación == "3ra_edad")
 ```
 
-##### Matriz de Correlaciones
+## Seleccion de Variables
 
-Para empezar la selección de posibles variables objetivo y predictoras de las escogidas anteriormente se desarrolla el siguiente gráfico de correlación:
+De [1] y [2] se obtuvieron las variables para el modelo general. Se realizó un mapeo con las que se tenían en la base de datos del DANE y se eligieron las siguientes: 
+
+```{r, echo = F}
+vars_gen <- matrix(c("NIVEL_DE_EDUCACION", "SEXO", "SALUD_AUTOPERCIBIDA", "ESTADO_CIVIL",
+                "ETNIA", "INGRESO_AUTOPERCIBIDO", "SEGURIDAD_AUTOPERCIBIDA", 
+                "TRABAJO_AUTOPERCIBIDO", "SATISFACCION", "I_HOGAR", 
+                "PERCAPITA", "COND_VIDA_DEL_HOGAR"), ncol=3, byrow=TRUE)
+vars_gen <- as.data.frame(vars_gen)                  # Convert table to data.frame
+vars_gen
+```
+
+Cada una de estas variables mostraron correlación en los estudios realizados sobre factores que influyen en la satisfacción de la vida en abuelos. En [2] también mencionan variables que involucran relaciones sociales, sin embargo en la base de datos no se logró de terminar alguna asociación lógica para este tipo de variables.
+
+## Estructura
+
+Análogamente a la divergencia entre modelos para niños y abuelos, después de realizar un análisis de correlaciones entre todas las variables:
 
 ```{r correlación_satisfacción ,echo=F}
 varsGeneral <- personas %>% select(-ID_Persona,-Clasificación,-SEXO) %>% na.omit() 
@@ -164,39 +150,48 @@ M = cor(varsGeneral)
 ggcorrplot(M, hc.order = TRUE, type = "lower",
    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
-Se evalúa la posibilidad de establecer como posible variable objetivo la satisfacción, esta tiene una buena correlación con las variables de satisfacción pero no con el resto, por lo tanto es posible que no tenga mucho sentido predecir la satisfacción general de un abuelo a partir de todas estas variables. Con base en lo anterior se evalúa la implementación de varios modelos, uno por cada variable de satisfacción.
 
-#### KNN
+se llegó a la conclusión de partir el modelo en 4: uno para predecir la satisfacción en general; otro para la satisfacción de la salud; para la satisfacción en cuanto a seguridad; y, finalmente, para la satisfacción laboral.
 
+A continuación se presenta cada modelo por separado.
+
+### Satisfacción de la Vida en General
+
+### Análisis Descriptivo
+
+### Matriz de Correlaciones
+
+Después de analizar la matriz de correlación general, se puede observar que las variables con mayor relación a la satisfacción son: SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, NIVEL_DE_EDUCACION, COND_VIDA_DEL_HOGAR, TRABAJO_AUTOPERCIBIDO.
+
+```{r, echo = F}
+
+# Se reemplaza los valores NaNs por la moda.
+moda_cond_hogar <- as.numeric(names(which.max(table(df_abuelos$COND_VIDA_DEL_HOGAR))))
+df_abuelos$COND_VIDA_DEL_HOGAR <- replace(df_abuelos$COND_VIDA_DEL_HOGAR, is.na(df_abuelos$COND_VIDA_DEL_HOGAR), moda_cond_hogar)
+
+varsGeneral <- subset(df_abuelos, select = c(SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, 
+                                     NIVEL_DE_EDUCACION, COND_VIDA_DEL_HOGAR, TRABAJO_AUTOPERCIBIDO))
+
+M = cor(varsGeneral)
+ggcorrplot(M, hc.order = TRUE, type = "lower",
+   lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
+```
+ 
 ```{r, echo = FALSE}
-# Normalización de los datos
-set.seed(27042022) # se fija por reproducibilidad
+# Se descartan las columnas que no hacen parte de la predicción
+datos <- subset(df_abuelos, select = c(SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURIDAD_AUTOPERCIBIDA, 
+                                     NIVEL_DE_EDUCACION, COND_VIDA_DEL_HOGAR, TRABAJO_AUTOPERCIBIDO))
 
-Y <- datos$Y
-X_centrada <- scale(datos,center = TRUE, scale = TRUE)
-media_total <- attr(X_centrada,'scaled:center')
-desv_est_total <- attr(X_centrada,'scaled:scale')
+# Por facilidad, se renombran las variables a Xi, 1 <= i <= 11
+names(datos) <- c('Y', 'X1','X2', 'X3', 'X4', 'X5')
 ```
 
-```{r, echo = FALSE}
-set.seed(27042022) # se fija por reproducibilidad
+de las cuales se toma como variable objetivo la SATISFACCIÓN y como variables predictoras las demás.
 
-# Separación de los datos en entrenamiento y prueba
-datos1 <- sample(2, nrow(datos),
-                   replace = T,
-                    prob = c(0.75, 0.25))
+### Modelo con Regresion Lineal
 
-train <- datos[datos1 == 1,]
-test <- datos[datos1 == 2,]
+Para predecir las satisfacción se utilizó la regresión lineal ya que este modelo fue el que mejor se acomodó a los datos. Para esto, se dividió los datos en entrenamiento (75%) y prueba (25%). Luego se entrena el modelo y finalmente se realizan las predicciones con los datos de prueba.
 
-# Modelo de KNN con 4-folds
-modelo_knn_k4 <- knnreg(x=X_centrada,y=Y,k=4)
-
-test$KNN_Predict <- predict(modelo_knn_k4, newdata = test)
-head(test[ , c('Y', 'KNN_Predict')])
-```
-
-#### Regresion con lm y glm
 ```{r, echo=FALSE}
 set.seed(27042022) # se fija por reproducibilidad
 
@@ -232,17 +227,18 @@ save(file="App/data/modeloSatisfaccion.RData",
 
 ### Satisfacción en la Salud
 
-Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibles predictores de la satisfacción de la Salud de los abuelos:
+Para determinar las variables predictoras de este modelo se tomó como base el estudio [4]. En este estudio, explican los factores que afectan en la satisfacción y calidad de la salud. Estas son las variables que se seleccionaron:
 
-* AFILIADO (p6090)
-* PAGO_EPS (p8551)
-* CALIDAD_PRESTADOR (p6181)
-* ESTADO_SALUD (p6127)
-* TIPO_PAGO (p6115)
-* REGIMEN (P6100)
-* ENFERMEDAD_CRONICA (P1930)
+```{r, echo = F}
+vars_gen <- matrix(c("AFILIADO", "PAGO_EPS", "CALIDAD_PRESTADOR", "ESTADO_SALUD",
+                "TIPO_PAGO", "REGIMEN", "ENFERMEDAD_CRONICA", "", ""), ncol=3, byrow=TRUE)
+vars_gen <- as.data.frame(vars_gen)
+names(vars_gen) <- NULL
+vars_gen
+```
 
-#### Análisis Descriptivo
+### Análisis Descriptivo
+
 ```{r, echo = FALSE}
 # Une las tablas
 df_salud <- merge(x = comp_hogar, y = salud, by = "ID_Persona")
@@ -262,14 +258,17 @@ save(file="App/data/dfSalud.RData",
 
 ```
 
-##### Matriz de Correlaciones
+### Matriz de Correlaciones
 ```{r, echo = FALSE}
 M <- cor(df_salud)
 ggcorrplot(M, hc.order = TRUE, type = "lower",
    lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
 
-#### Regresion con lm
+### Modelo con Regresion Lineal
+
+Análogamente, para predecir las satisfacción de seguridad se utilizó la regresión lineal ya que este modelo fue el que mejor se acomodó a los datos. Para esto, se devide los datos en entrenamiento (75%) y prueba (25%). Luego se entrena el modelo y finalmente se realizan las predicciones con los datos de prueba.
+
 ```{r, echo=FALSE}
 set.seed(27042022) # se fija por reproducibilidad
 
@@ -297,18 +296,17 @@ str(train_salud)
 ```
 
 ### Satisfacción sobre el Nivel de Seguridad
-Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibles predictores de la satisfacción de la seguridad de los abuelos:
 
-* ESTADO_CIVIL (P5502)
-* SEXO (P6020´)
-* ESTRATO (P8520S1A1)
-* NIVEL_DE_SEGURIDAD (P9010)
-* CONDICIONES_DE_VIDA_HOGAR (P9030)
-* ES_CAMPESINO (P2059)
-* CAI P1913S5
-* ROBO P9025S2
-* OTRO_DELITO P9025S1
-* LEE_ESCRIBE (P6160)
+En este caso se la selección de variables se basó en [6]. Allí exploran los factores de seguridad en un barrio, además muestran problemas psicológicos que pueden influenciar en cómo percibe una persona la seguridad en un ambiente. Con base a los factores descritos allí y comparando las variables que se tienen en la base de datos, se escogieron las siguientes variables:
+
+```{r, echo = F}
+vars_gen <- matrix(c("ESTADO_CIVIL", "SEXO", "ESTRATO", "NIVEL_DE_SEGURIDAD",
+                "CONDICIONES_DE_VIDA_HOGAR", "ES_CAMPESINO", "CAI", "ROBO", 
+                "OTRO_DELITO", "LEE_ESCRIBE"), ncol=2, byrow=TRUE)
+vars_gen <- as.data.frame(vars_gen)
+names(vars_gen) <- NULL
+vars_gen
+```
 
 #### Análisis Descriptivo
 ```{r, echo = FALSE}
@@ -330,11 +328,11 @@ df_seguridad <- subset(df_seguridad, select = c("P1898", "P5502", "P6020", "P852
 # Cambia los nombres de las columnas
 names(df_seguridad) = c("SATISFACCION", "ESTADO_CIVIL", "SEXO", "ESTRATO",
                         "NIVEL_DE_SEGURIDAD", "CONDICIONES_DE_VIDA_HOGAR",
-                      "ES_CAMPESINO","CAI", "ROBO", "OTRO_DELITO", "LEE_ESCRIBE")
+                      "ES_CAMPESINO","CAI", "OTRO_DELITO", "ROBO", "LEE_ESCRIBE")
 
 ```
 
-##### Matriz de Correlaciones Pearson
+### Matriz de Correlaciones Pearson
 
 ```{r, echo = FALSE}
 M <- cor(df_seguridad)
@@ -342,7 +340,7 @@ ggcorrplot(M, hc.order = TRUE, type = "lower",
     lab = TRUE,tl.cex = 8, pch.col = "red",lab_size = 2)
 ```
 
-##### Correlaciones Polychoric
+### Correlaciones Polychoric
 
 Para tener mayor certeza sobre la relación entre variables, se hace uso del método Polychoric y se obtuvieron los siguientes resultados:
 ```{r, echo = FALSE}
@@ -372,7 +370,10 @@ Por tal motivo, se decide eliminar las variables SEXO, ESTRATO, ES_CAMPESINO y C
 df_seguridad = subset(df_seguridad, select = c(-SEXO, -ESTRATO, -ES_CAMPESINO, -CAI))
 ```
 
-#### Regresion con lm
+### Modelo con Regresion Lineal
+
+Aquí también la regresión lineal fue el modelo elegido para predecir la satisfacción. Para esto, se devide los datos en entrenamiento (75%) y prueba (25%). Luego se entrena el modelo y finalmente se realizan las predicciones con los datos de prueba.
+
 ```{r, echo=FALSE}
 set.seed(27042022) # se fija por reproducibilidad
 
@@ -397,16 +398,15 @@ save(file="App/data/modeloSatisfaccionSeguridad.RData",
 ```
 
 ### Satisfacción en el Trabajo
-Según (PONER BIBLIOGRAFÍA) se seleccionan las siguientes variables como posibles predictores de la satisfacción en el trabajo de los abuelos:
+Finalmente, las características predictoras de la satisfacción del trabajo fueron obtenidas siguiendo [5]. Este estudio presenta unas variables relacionadas con la satisfacción laboral y correlaciones entre sí. Basados en estas variables, se buscaron los análogos en la base de datos que se tiene y se lograron de terminar las siguientes:
 
-* SEXO (P6020´)
-* CARGO (P6435)
-* TIENE_CONTRATO (P6440)
-* TIPO_CONTRATO (P6460)
-* SALARIO (P8624)
-* HORAS_LABORALES (P415)
-* RECIBIO_PRIMAS (P8631)
-* RECIBIO_PENSIONES (P8642)
+```{r, echo = F}
+vars_gen <- matrix(c("SEXO", "CARGO", "TIENE_CONTRATO", "SALARIO",
+                "HORAS_LABORALES", "RECIBIO_PRIMAS", "RECIBIO_PENSIONES", ""), ncol=2, byrow=TRUE)
+vars_gen <- as.data.frame(vars_gen)
+names(vars_gen) <- NULL
+vars_gen
+```
 
 #### Análisis Descriptivo
 
@@ -440,19 +440,26 @@ gg_miss_upset(subset(df_trabajo, select = c(-RECIBIO_PRIMAS, -RECIBIO_PENSIONES)
 
 se puede determinar que la mayoría de estos no respondieron a las preguntas que se les hicieron sobre el trabajo. Este mismo procedimiento se repitió con variables diferentes, pero no se obtuvieron resultados distintos a los presentados. Por tal motivo, se decide no realizar un modelo de predicción para la satisfacción del trabajo en los abuelos. En primera instancia se pensó que este comportamiento se debía a que la mayoría de los abuelos estaban pensionados, pero si se observan los abuelos pensionados:
 
-```{r, echo=FALSE}
- barplot(table(df_trabajo$RECIBIO_PENSIONES), main = "¿Recibe pensión?")
+```{r, echo=FALSE, fig.width=6, fig.height=4}
+resum_1<- df_trabajo %>% count(RECIBIO_PENSIONES, sort=TRUE)
+ggplot(resum_1, aes(x=reorder(RECIBIO_PENSIONES, n), y=n))+
+  geom_col(fill="Black",alpha=0.4)+
+  ggtitle("¿Recibe pensión?")+
+  theme(plot.title = element_text(hjust = 0.5))+
+  ylab("Cantidad de registros")+
+  xlab("Respuesta")+
+  geom_text(aes(label=n), position = "stack", hjust = 0.5,vjust=-0.1, size=2.5)
 ```
 
 la gran mayoría de estos respondieron que no recibían algún tipo de pensión (2). Por tanto, se puede inferir que la mayoría de los abuelos no trabajan y tampoco reciben pensión, es decir, viven dependientes de sus familiares.
 
 ## Modelos Predictivos en Niños
-```{r}
+```{r, echo = F}
 # los datos:
 ninos <- read.csv2("Datos/datos_ninos.csv", header=TRUE, dec=".", encoding="UTF-8")
 ```
 ### Correlaciones
-```{r}
+```{r, echo = F}
 corr_ninos <- ninos %>% select(SATISFACCION, ESTADO_SALUD, ACTIVIDADES, ETNIA, 
                                CONDIC_VIDA_HOGAR, INCRESOS_AUTOPERCIBIDOS_HOGAR,
                                PERCAPITA, CANT_PERSONAS_HOGAR, ESCUELA_OFICIAL,
@@ -471,7 +478,7 @@ ggcorrplot(M, hc.order = TRUE, type = "lower", lab = TRUE,tl.cex = 6,
 ```
 
 Los datos para niños:
-```{r}
+```{r, echo = F}
 df_ninos <- ninos %>% select(INCAP, SATISFACCION, 
                              PERCAPITA, INCRESOS_AUTOPERCIBIDOS_HOGAR, 
                              UBICACION_ESCUELA, EDUCACION_PADRES,
@@ -515,7 +522,7 @@ head(df_ninos)
 ### Resultados del entrenamiento
 
 * Separación de los datos en entrenamiento y prueba
-```{r}
+```{r, echo = F}
 datos1 <- sample(2, nrow(df_ninos),
                    replace = TRUE,
                     prob = c(0.75, 0.25))
@@ -525,7 +532,7 @@ test <- df_ninos[datos1 == 2,]
 ```
 
 * Modelo de árbol de decisión
-```{r}
+```{r, echo = F}
 ctreeNiños <- ctree(formula = SATISFACCION ~ ., data=train, 
                 controls = ctree_control(mincriterion = 0.7))
 
@@ -533,15 +540,15 @@ save(file="App/data/modeloSatisfaccionNiños.RData",
                               list=c("ctreeNiños"))
 ```
 
-```{r}
+```{r, echo = F}
 png(file = "App/www/decision_tree_niños.png", width = 6000, height = 3000, )
 plot(ctreeNiños)
 dev.off()
 ctreeNiños
 ```
 
-```{r}
-test_pred <- predict(modelo, newdata = test)
+```{r, echo = F}
+test_pred <- predict(ctreeNiños, newdata = test)
 colnames(test_pred) <- c('pred_Satisfaccion')
 test_pred <- cbind(test_pred, test['SATISFACCION'])
 
@@ -549,8 +556,8 @@ cat_test_pred = lapply(test_pred/5.6, as.integer)
 table(cat_test_pred)
 ```
 
-```{r}
-train_pred <- predict(modelo, newdata = train)
+```{r, echo = F}
+train_pred <- predict(ctreeNiños, newdata = train)
 colnames(train_pred) <- c('pred_Satisfaccion')
 train_pred <- cbind(train_pred, train['SATISFACCION'])
 
@@ -571,7 +578,7 @@ Sacamos paso a paso una del los variables y miramos que impacto tiene cada.
  ** Sacamos VALOR_BECA porque la correlación que hemos visto antes depende mucho de un valor atípico.
 
 #### Cálculo de métricas 
-```{r}
+```{r, echo = F}
 MSE_train <- mean((train_pred$SATISFACCION - train_pred$pred_Satisfaccion)^2)
 
 MS_train <- mean(train_pred$SATISFACCION)^2
@@ -655,20 +662,14 @@ levels(cat_test_pred$SATISFACCION)
 
 # Recomendaciones
 
-\begin{thebibliography}{X}
-\bibitem{b1}
-Ramírez Pérez, Mauricio; Lee Maturana, Sau-Lyn (2012). Factores asociados a la satisfacción vital en adultos mayores de 60 años. Polis (Santiago), 11(33), 407–428. doi:10.4067/s0718-65682012000300020
-\bibitem{b2}
-Kutubaeva RZh (2019) Analysis of life satisfaction of the elderly population on the example of Sweden, Austria and Germany. Population and Economics 3(3): 102-116. https://doi.org/10.3897/popecon.3.e47192
-\bibitem{b3}
-Palmore, E., Luikart, C. (1972). Health and Social Factors Related to Life Satisfaction. Journal of Health and Social Behavior, 13(1), 68–80. doi: 10.2307/2136974
-\bibitem{b4}
-Naidu, Aditi (2009). Factors affecting patient satisfaction and healthcare quality. International Journal of Health Care Quality Assurance, 22(4), 366–381. doi:10.1108/09526860910964834 
-\bibitem{b5}
-ROBLES-GARCIA, Monica et al. Variables relacionadas con la satisfaccion laboral: un estudio transversal a partir del modelo EFQM. Gac Sanit [online]. 2005, vol.19, n.2, pp.127-134. ISSN 0213-9111
-\bibitem{b6}
-Booth, Jaime; Ayers, Stephanie L.; and Marsiglia, Flavio F. (2012) "Perceived Neighborhood Safety and Psychological Distress: Exploring Protective Factors," The Journal of Sociology \& Social Welfare: Vol. 39 : Iss. 4 , Article 8. Available at: https://scholarworks.wmich.edu/jssw/vol39/iss4/
-\bibitem{b7}
-https://ourworldindata.org/happiness-and-life-satisfaction
-\end{thebibliography}
+# Bibliografía
+
+[1]  Ramírez Pérez, Mauricio; Lee Maturana, Sau-Lyn (2012). Factores asociados a la satisfacción vital en adultos mayores de 60 años. Polis (Santiago), 11(33), 407–428. doi:10.4067/s0718-65682012000300020  
+[2] Kutubaeva RZh (2019) Analysis of life satisfaction of the elderly population on the example of Sweden, Austria and Germany. Population and Economics 3(3): 102-116. https://doi.org/10.3897/popecon.3.e47192  
+[3] Palmore, E., Luikart, C. (1972). Health and Social Factors Related to Life Satisfaction. Journal of Health and Social Behavior, 13(1), 68–80. doi: 10.2307/2136974  
+[4] Naidu, Aditi (2009). Factors affecting patient satisfaction and healthcare quality. International Journal of Health Care Quality Assurance, 22(4), 366–381. doi:10.1108/09526860910964834  
+[5] ROBLES-GARCIA, Monica et al. Variables relacionadas con la satisfaccion laboral: un estudio transversal a partir del modelo EFQM. Gac Sanit [online]. 2005, vol.19, n.2, pp.127-134. ISSN 0213-9111  
+[6] Booth, Jaime; Ayers, Stephanie L.; and Marsiglia, Flavio F. (2012) "Perceived Neighborhood Safety and Psychological Distress: Exploring Protective Factors," The Journal of Sociology \& Social Welfare: Vol. 39 : Iss. 4 , Article 8. Available at: https://scholarworks.wmich.edu/jssw/vol39/iss4/  
+[7] https://ourworldindata.org/happiness-and-life-satisfaction  
+
 
