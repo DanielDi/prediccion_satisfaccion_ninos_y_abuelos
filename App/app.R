@@ -11,6 +11,7 @@ library(caret)
 library(shinydashboard)
 library(shinythemes)
 source('modelosAbuelosUI.R')
+source('modeloNiños.R')
 load("data/modeloSatisfaccion.RData")
 load("data/modeloSatisfaccionSalud.RData")
 load("data/modeloSatisfaccionSeguridad.RData")
@@ -21,6 +22,7 @@ ui <- fluidPage(theme=shinytheme("superhero"),
                                     h4("Explicación general del problema, motivaciones principales y usos de las predicciones del modelo enfocadas en los objetivos del ICBF")   
                            ),
                            tabModeloAbuelos,
+                           tabModeloNinos,
                            tabPanel("Visualizacion",
                                     dashboardPage(title = "HOLA",skin = "red",
                                                   dashboardHeader(),
@@ -78,7 +80,10 @@ server <- function(input, output) {
     return(salida)
     
   })
+  
+
 }
+
 
 # Run the application 
 shinyApp(ui = ui, server = server)
