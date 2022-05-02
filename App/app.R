@@ -18,6 +18,8 @@ load("data/modeloSatisfaccion.RData")
 load("data/modeloSatisfaccionSalud.RData")
 load("data/modeloSatisfaccionSeguridad.RData")
 load("data/dfSalud.RData")
+load("data/dfSeguridad.RData")
+load("data/dfdatos.RData")
 
 ui <- fluidPage(theme=shinytheme("superhero"),
                 navbarPage(title = "Nombre Proyecto",

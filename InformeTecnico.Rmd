@@ -158,6 +158,10 @@ datos <- subset(df_abuelos, select = c(SATISFACCION, SALUD_AUTOPERCIBIDA, SEGURI
 
 # Por facilidad, se renombran las variables a Xi, 1 <= i <= 11
 names(datos) <- c('Y', 'X1','X2', 'X3', 'X4', 'X5')
+
+save(file="App/data/dfdatos.RData",
+                              list=c("datos"))
+
 ```
 
 de las cuales se toma como variable objetivo la SATISFACCIÓN y como variables predictoras las demás.
@@ -304,6 +308,9 @@ names(df_seguridad) = c("SATISFACCION", "ESTADO_CIVIL", "SEXO", "ESTRATO",
                         "NIVEL_DE_SEGURIDAD", "CONDICIONES_DE_VIDA_HOGAR",
                       "ES_CAMPESINO","CAI", "OTRO_DELITO", "ROBO", "LEE_ESCRIBE")
 
+
+save(file="App/data/dfSeguridad.RData",
+                              list=c("df_seguridad"))
 ```
 
 ### Matriz de Correlaciones Pearson
