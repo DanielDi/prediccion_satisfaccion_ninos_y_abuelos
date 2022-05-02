@@ -10,6 +10,8 @@ library(shiny)
 library(caret)
 library(shinydashboard)
 library(shinythemes)
+library(magrittr)
+
 source('modelosAbuelosUI.R')
 source('visualizacionUI.R')
 load("data/modeloSatisfaccion.RData")
@@ -20,12 +22,14 @@ load("data/dfSalud.RData")
 ui <- fluidPage(theme=shinytheme("superhero"),
                 navbarPage(title = "Nombre Proyecto",
                            tabPanel("Sobre el proyecto",
-                                    h4("Explicación general del problema, motivaciones principales y usos de las predicciones del modelo enfocadas en los objetivos del ICBF")   
+                                    
+                                    p("Explicación general del problema, motivaciones principales y usos de las predicciones del modelo enfocadas en los objetivos del ICBF")   
                            ),
-                           tabModeloAbuelos,
+                           tabModeloAbuelos, 
                            tabVisualizacion
                            
-                ))
+                )
+      )
 
 server <- function(input, output) {
   
@@ -73,14 +77,14 @@ server <- function(input, output) {
     return(salida)
     
   })
-  
+
   #grafico
   
   output$col <- renderPlot({
     
     
-    #colm<-as.numeric(input$var)
-    graf<-df_salud[,input$var] %>% table() %>%  barplot(col="purple")
+    colm<-as.numeric(input$var)
+    graf<-df_salud[,colm] %>% table() %>%  barplot(col="blue")
     return(graf)
     
     #colm <- input$var
