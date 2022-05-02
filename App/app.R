@@ -134,7 +134,7 @@ server <- function(input, output) {
                           ACTIVIDAD_ULT_SEMANA=addNA(factor(input$actividadUltSemana, levels=levels(df_ninos$ACTIVIDAD_ULT_SEMANA))),
                           LUGAR_TRABAJO=addNA(factor(input$lugarTrabajo, levels=levels(df_ninos$LUGAR_TRABAJO)))
     )
-    salida <- predict(ctreeNiños, entrada)
+    salida <- anapply(predict(ctreeNiños, entrada)/5.6, as.integer)+1
   })
   
 }
