@@ -1,4 +1,4 @@
-tabVisualizacion <- tabPanel("Visualización",
+tabVisualizacion <- tabPanel("Gráficos Estadísticos",
   fluidPage(
          titlePanel("Gráficas"),
          sidebarLayout(
@@ -11,7 +11,7 @@ tabVisualizacion <- tabPanel("Visualización",
                                      "Enfermedad Crónica"=6)
                          )),
            mainPanel(
-             p("Grafico de Barras"),
+             p("Gráfico de Barras"),
              plotOutput("salud")
            )
          ),
