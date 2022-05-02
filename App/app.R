@@ -10,27 +10,26 @@ library(shiny)
 library(caret)
 library(shinydashboard)
 library(shinythemes)
+library(magrittr)
+
 source('modelosAbuelosUI.R')
+source('visualizacionUI.R')
 load("data/modeloSatisfaccion.RData")
 load("data/modeloSatisfaccionSalud.RData")
 load("data/modeloSatisfaccionSeguridad.RData")
+load("data/dfSalud.RData")
 
 ui <- fluidPage(theme=shinytheme("superhero"),
                 navbarPage(title = "Nombre Proyecto",
                            tabPanel("Sobre el proyecto",
-                                    h4("Explicación general del problema, motivaciones principales y usos de las predicciones del modelo enfocadas en los objetivos del ICBF")   
+                                    
+                                    p("Explicación general del problema, motivaciones principales y usos de las predicciones del modelo enfocadas en los objetivos del ICBF")   
                            ),
-                           tabModeloAbuelos,
-                           tabPanel("Visualizacion",
-                                    dashboardPage(title = "HOLA",skin = "red",
-                                                  dashboardHeader(),
-                                                  dashboardSidebar(),
-                                                  dashboardBody()
-                                    )
-
-                           )
+                           tabModeloAbuelos, 
+                           tabVisualizacion
                            
-                ))
+                )
+      )
 
 server <- function(input, output) {
   
@@ -78,6 +77,32 @@ server <- function(input, output) {
     return(salida)
     
   })
+
+  #grafico
+  
+  output$salud <- renderPlot({
+    
+    
+    colm<-as.numeric(input$var_salud)
+    graf<-df_salud[,colm] %>% table() %>%  barplot(col="cornflowerblue")
+    return(graf)
+    
+  })
+  
+  output$seguridad <- renderPlot({
+    
+    colm<-as.numeric(input$var_seguridad)
+    graf<-df_seguridad[,colm] %>% table() %>%  barplot(col="azure3")
+    return(graf)
+  })
+  
+  output$vida <- renderPlot({
+    
+    colm<-as.numeric(input$var_vida)
+    graf<-datos[,colm] %>% table() %>%  barplot(col="darkseagreen")
+    return(graf)
+  })
+  
 }
 
 # Run the application 

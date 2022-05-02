@@ -72,12 +72,11 @@ Una vez adoptada esta definicion se analizo cuantas observaciones de la ECV cump
 
 ## Abuelos
 
-Para los abuelos, al igual que con los niños, se penso inicialmente en tomar un rango de edad que tomara la definicion popular de este colectivo, los adultos de la tercera edad (mayores de 60 años). Sin embargo, luego planteamos que debiamos tener en cuenta cual es la definicion literal de abuelo,  y mediante un sistema de grafos logramos determinar el numero de hombres y mujeres que tenian un nieto. Filtrándolos por su rango edad se observo que se tienen registrados un total de 1467 abuelos mayores de 60 años, y 1049 abuelos menores de 60 años.
+Para los abuelos, al igual que con los niños, se penso inicialmente en tomar un rango de edad que tomara la definicion popular de este colectivo, los adultos de la tercera edad (mayores de 60 años). Sin embargo, luego planteamos que debiamos tener en cuenta cual es la definicion literal de abuelo,  y mediante un sistema de grafos logramos determinar el numero de hombres y mujeres que tenian un nieto. Filtrandolos por su rango edad se observo que se tienen registrados un total de 1467 abuelos mayores de 60 años, y 1049 abuelos menores de 60 años.
 
-Se observa que con la definicion inicial estábamos omitiendo un total de 1049 observaciones, además, se observa que los abuelos registrados en la base de datos son relativamente pocos.
+Se observa que con la definicion inicial estabamos omitiendo un total de 1049 observaciones, ademas, se observa que los abuelos resgitrados en la base de datos son relativamente pocos pues solo representan el x% del total de personas.
 
-Ante esta situación tomamos la decisión de tomar solamente a las personas de la tercera edad para nuestro modelo.
-
+Ante esta situación tomamos la desicion de tomar solamente a las personas de la tercera edad para nuestro modelo.
 
 ```{r lectura_datos, echo=F}
 personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=".", encoding="UTF-8")
@@ -227,6 +226,10 @@ df_salud <- subset(df_salud, select = c("P1897", "P6181", "P6127", "P8520S1A1", 
 
 # Cambia los nombres de las columnas
 names(df_salud) = c("SATISFACCION", "CALIDAD_EPS", "ESTADO_SALUD", "ESTRATO", "REGIMEN", "ENFERMEDAD_CRONICA")
+
+save(file="App/data/dfSalud.RData",
+                              list=c("df_salud"))
+
 ```
 
 ### Matriz de Correlaciones
