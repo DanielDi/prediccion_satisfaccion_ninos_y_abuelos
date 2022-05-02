@@ -1,6 +1,6 @@
-tabVisualizacion <- tabPanel("Visualizacion",
+tabVisualizacion <- tabPanel("Visualización",
   fluidPage(
-         titlePanel("Graficas"),
+         titlePanel("Gráficas"),
          sidebarLayout(
            sidebarPanel("Salud",
              selectInput("var_salud", label="Seleccione la variable",
@@ -42,7 +42,7 @@ tabVisualizacion <- tabPanel("Visualizacion",
                                                 "Trabajo Autopercibido"=6)
                         )),
            mainPanel(
-             p("Grafico de Barras"),
+             p("Gráfico de Barras"),
              plotOutput("vida")
            )
          )
