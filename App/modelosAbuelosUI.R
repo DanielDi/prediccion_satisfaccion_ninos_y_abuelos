@@ -82,7 +82,7 @@ tabModeloAbuelos <- tabPanel( "Modelo para Abuelos",
                            label="¿Sabe leer y escribir?",
                            choices = list("Sí"=1,
                                           "No"=2)),
-               h4("Satisfacción estimada de la salud: "),
+               h4("Satisfacción estimada de la seguridad: "),
                h4(textOutput("prediccionSeguridad"))
              )
       ),
