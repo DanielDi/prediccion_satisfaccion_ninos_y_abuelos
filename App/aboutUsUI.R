@@ -54,7 +54,7 @@ tabAcercaDeNosotros <- tabPanel("Acerca de Nosotros",
                                  column(6,
                                         wellPanel(
                                           h3("Vídeo"),
-                                          HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/Ka2pWqXS1WA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
+                                          HTML('<iframe width="560" height="315" src="https://www.youtube.com/embed/B_oZs7OAYV0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>')
                                         )
                                  )
                                )

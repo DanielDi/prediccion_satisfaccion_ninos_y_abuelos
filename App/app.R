@@ -137,6 +137,7 @@ server <- function(input, output) {
                           LUGAR_TRABAJO=addNA(factor(input$lugarTrabajo, levels=levels(df_ninos$LUGAR_TRABAJO)))
     )
     salida <- predict(ctreeNiños, entrada)
+    salida <- as.integer(salida / 5.6)
   })
   
 }

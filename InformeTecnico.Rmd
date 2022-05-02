@@ -622,6 +622,7 @@ MAE_cat_train <- mean(abs(cat_train_pred$SATISFACCION - cat_train_pred$pred_Sati
 
 RMSE_cat_train <- sqrt(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_Satisfaccion)^2))
 ```
+
 Entrenamiento
 - MSE: `r MSE_train`  
 - MS: `r MS_train`  
