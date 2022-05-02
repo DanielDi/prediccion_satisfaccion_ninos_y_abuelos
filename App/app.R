@@ -11,6 +11,7 @@ library(caret)
 library(shinydashboard)
 library(shinythemes)
 library(magrittr)
+library(party)
 
 source('modelosAbuelosUI.R')
 source('modeloNiños.R')
@@ -114,9 +115,8 @@ server <- function(input, output) {
     return(graf)
   })
   
-  #Modelo niños
-  output$prediccionNinos <- renderText({
-    
+  # Modelo niños
+  resultado_ninos <- reactive({
     INCAP <- as.integer(input$INCAP_0)+as.integer(input$INCAP_1)+as.integer(input$INCAP_2)+as.integer(input$INCAP_3)+as.integer(input$INCAP_4)+as.integer(input$INCAP_5)+as.integer(input$INCAP_6)
     
     entrada <- data.frame(INCAP=as.integer(INCAP),
@@ -136,8 +136,14 @@ server <- function(input, output) {
                           ACTIVIDAD_ULT_SEMANA=addNA(factor(input$actividadUltSemana, levels=levels(df_ninos$ACTIVIDAD_ULT_SEMANA))),
                           LUGAR_TRABAJO=addNA(factor(input$lugarTrabajo, levels=levels(df_ninos$LUGAR_TRABAJO)))
     )
+    
     salida <- predict(ctreeNiños, entrada)
-    salida <- as.integer(salida / 5.6)
+    salida <- salida / 5.6
+    return(salida)
+    })
+  
+  output$prediccionNinos <- renderText({
+    salida <- resultado_ninos()
   })
   
 }

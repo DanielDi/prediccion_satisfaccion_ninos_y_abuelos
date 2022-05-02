@@ -698,6 +698,7 @@ levels(cat_test_pred$SATISFACCION)
 * Realizar un análisis más detallado sobre las variables categóricas ya que en este estudio se mezclaron con continuas, lo cual genera dudas en los resultados.  
 * Realizar una ingenería de características con mayor detenimiento ya que muchas variables que por sí solas no aportan, pero al juntar otras pueden generar información valiosa.
 * Probar con otros modelos que realizan una mejor precisión para datos categóricos.
+* El modelo para la predicción de niños tiene varias variables que no afectan significativamente el resultado. Es necesario indagar más sobre cuáles son las posibles causas y qué acciones se pueden tomar al respecto.
 
 # Bibliografía
 
