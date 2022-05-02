@@ -114,12 +114,15 @@ server <- function(input, output) {
   
   #Modelo niños
   output$prediccionNinos <- renderText({
-    entrada <- data.frame(INCAP=as.integer(32),
-                          PERCAPITA=input$PERCAPITA ,
-                          INCRESOS_AUTOPERCIBIDOS_HOGAR=input$ingresosAutopercibidos ,
+    
+    INCAP <- as.integer(input$INCAP_0)+as.integer(input$INCAP_1)+as.integer(input$INCAP_2)+as.integer(input$INCAP_3)+as.integer(input$INCAP_4)+as.integer(input$INCAP_5)+as.integer(input$INCAP_6)
+    
+    entrada <- data.frame(INCAP=as.integer(INCAP),
+                          PERCAPITA=as.numeric(input$PERCAPITA) ,
+                          INCRESOS_AUTOPERCIBIDOS_HOGAR=as.numeric(input$ingresosAutopercibidos) ,
                           UBICACION_ESCUELA=as.integer(input$ubicacionEscuela),
-                          EDUCACION_PADRES=input$educacionPadres,
-                          CONDIC_VIDA_HOGAR=input$CONDIC_VIDA_HOGAR,
+                          EDUCACION_PADRES=as.numeric(input$educacionPadres),
+                          CONDIC_VIDA_HOGAR=as.numeric(input$CONDIC_VIDA_HOGAR),
                           TIEMPO_TRANSPORTE_ESC=as.integer(input$tiempoTransporteEscuela),
                           HORAS_TRABAJO =as.integer(input$HORAS_TRABAJO),
                           ETNIA=factor(input$etnia, levels=levels(df_ninos$ETNIA)),
