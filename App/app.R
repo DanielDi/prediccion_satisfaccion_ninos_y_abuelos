@@ -14,6 +14,7 @@ library(magrittr)
 
 source('modelosAbuelosUI.R')
 source('visualizacionUI.R')
+source('aboutUsUI.R')
 load("data/modeloSatisfaccion.RData")
 load("data/modeloSatisfaccionSalud.RData")
 load("data/modeloSatisfaccionSeguridad.RData")
@@ -29,7 +30,8 @@ ui <- fluidPage(theme=shinytheme("united"),
                                     img(src="LOGO.png", height = 400, width = 400),img(src="icbf.png", height = 400, width = 400)
                            ),
                            tabModeloAbuelos, 
-                           tabVisualizacion
+                           tabVisualizacion,
+                           tabAcercaDeNosotros
                            
                 )
       )
