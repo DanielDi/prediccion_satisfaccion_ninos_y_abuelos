@@ -72,37 +72,11 @@ Una vez adoptada esta definicion se analizo cuantas observaciones de la ECV cump
 
 ## Abuelos
 
-Para los abuelos, al igual que con los niños, se penso inicialmente en tomar un rango de edad que tomara la definicion popular de este colectivo, los adultos de la tercera edad (mayores de 60 años). Sin embargo, luego planteamos que debiamos tener en cuenta cual es la definicion literal de abuelo,  y mediante un sistema de grafos logramos determinar el numero de hombres y mujeres que tenian un nieto. Filtrándolos por su rango edad se observo que se tienen registrados un total de 1467 abuelos mayores de 60 años, y 1049 abuelos menores de 60 años.
-
-<<<<<<< HEAD
-Filtrandolos por su rango edad se observo que se tienen registrados un total de 1467 abuelos mayores de 60 años, y 1049 abuelos menores de 60 años.
+Para los abuelos, al igual que con los niños, se penso inicialmente en tomar un rango de edad que tomara la definicion popular de este colectivo, los adultos de la tercera edad (mayores de 60 años). Sin embargo, luego planteamos que debiamos tener en cuenta cual es la definicion literal de abuelo,  y mediante un sistema de grafos logramos determinar el numero de hombres y mujeres que tenian un nieto. Filtrandolos por su rango edad se observo que se tienen registrados un total de 1467 abuelos mayores de 60 años, y 1049 abuelos menores de 60 años.
 
 Se observa que con la definicion inicial estabamos omitiendo un total de 1049 observaciones, ademas, se observa que los abuelos resgitrados en la base de datos son relativamente pocos pues solo representan el x% del total de personas.
 
 Ante esta situación tomamos la desicion de tomar solamente a las personas de la tercera edad para nuestro modelo.
-
-# Seleccion de Variables
-
-Para predecir la satisfacción se tomaron en cuenta las evidencias halladas en la bibliografía, donde se encontró que las variables relacionadas con el nivel de satisfacción de una persona son las siguientes:
-
-* NIVEL_DE_EDUCACION
-* SEXO
-* SALUD_AUTOPERCIBIDA
-* ESTADO_CIVIL
-* ETNIA
-* INGRESO_AUTOPERCIBIDO
-* SEGURIDAD_AUTOPERCIBIDA
-* TRABAJO_AUTOPERCIBIDO
-* SATISFACCION
-* I_HOGAR
-* PERCAPITA
-* COND_VIDA_DEL_HOGAR
-=======
-Se observa que con la definicion inicial estábamos omitiendo un total de 1049 observaciones, además, se observa que los abuelos registrados en la base de datos son relativamente pocos.
->>>>>>> ab3af27a4633d0417dc37c4cb36bf02cb6f5d2bb
-
-Ante esta situación tomamos la decisión de tomar solamente a las personas de la tercera edad para nuestro modelo.
-
 
 ```{r lectura_datos, echo=F}
 personas <- read.csv2("Datos/personas.csv", header=TRUE, dec=".", encoding="UTF-8")

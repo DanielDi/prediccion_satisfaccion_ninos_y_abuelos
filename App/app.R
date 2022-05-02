@@ -80,22 +80,27 @@ server <- function(input, output) {
 
   #grafico
   
-  output$col <- renderPlot({
+  output$salud <- renderPlot({
     
     
-    colm<-as.numeric(input$var)
-    graf<-df_salud[,colm] %>% table() %>%  barplot(col="blue")
+    colm<-as.numeric(input$var_salud)
+    graf<-df_salud[,colm] %>% table() %>%  barplot(col="cornflowerblue")
     return(graf)
     
-    #colm <- input$var
-    #a <- df_salud %>% count(colm)
-    #ggplot(a, aes(x=reorder(colm, n), y=n))+
-    #geom_col(fill="Purple",alpha=0.4)+
-    # coord_flip()+
-    #ylab("Cantidad")+
-    #xlab("Respuesta")+
-    #geom_text(aes(label=n), position = "stack", hjust = -0.1, size=2.5)
+  })
+  
+  output$seguridad <- renderPlot({
     
+    colm<-as.numeric(input$var_seguridad)
+    graf<-df_seguridad[,colm] %>% table() %>%  barplot(col="azure3")
+    return(graf)
+  })
+  
+  output$vida <- renderPlot({
+    
+    colm<-as.numeric(input$var_vida)
+    graf<-datos[,colm] %>% table() %>%  barplot(col="darkseagreen")
+    return(graf)
   })
   
 }
