@@ -624,7 +624,7 @@ RMSE_cat_train <- sqrt(mean((cat_train_pred$SATISFACCION - cat_train_pred$pred_S
 ```
 
 Entrenamiento
-- MSE: `r MSE_train`  
+- MSE: `r MSE_train` 
 - MS: `r MS_train`  
 - MAE: `r MAE_train`  
 Para las 10 categorías
