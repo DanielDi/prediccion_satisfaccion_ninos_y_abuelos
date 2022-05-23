@@ -48,7 +48,7 @@ tabAcercaDeNosotros <- tabPanel("Acerca de Nosotros",
                                           h3("Github"),
                                           a("Link del proyecto", href="https://github.com/DanielDi/prediccion_satisfaccion_ninos_y_abuelos"),
                                           h3("RPubs"),
-                                          a("Reporte técnico", href="https://github.com/DanielDi/prediccion_satisfaccion_ninos_y_abuelos"),
+                                          a("Reporte técnico", href="https://rpubs.com/brayaON/897072"),
                                         )
                                  ),
                                  column(6,
