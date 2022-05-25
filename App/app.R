@@ -83,7 +83,7 @@ server <- function(input, output) {
     entrada <- data.frame(X1=resultadoSalud(),
                           X2=resultadoSeguridad(),
                           X3=as.integer(input$nvEducacion),
-                          X4=as.numeric(input$condHogar),
+                          X4=as.integer(input$condHogar),
                           X5=input$satisfaccionTrabajo)
     salida <- predict(lm1,newdata = entrada)
     return(salida)

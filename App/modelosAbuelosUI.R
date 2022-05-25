@@ -106,12 +106,6 @@ tabModeloAbuelos <- tabPanel( "Modelo para Abuelos",
                                           "Tecnólogo"=7,
                                           "Universitario"=8,
                                           "Postgrado"=9)),
-               selectInput("condHogar",
-                           label="¿Actualmente las condiciones de vida en su hogar son?",
-                           choices = list("Muy buenas"=1,
-                                          "Buenas"=2,
-                                          "Regulares"=3,
-                                          "Malas"=4)),
                h4("Satisfacción estimada con la vida:"),
                h4(textOutput("prediccion"))
              )
